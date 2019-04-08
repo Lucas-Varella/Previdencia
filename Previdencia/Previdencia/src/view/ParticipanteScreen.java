@@ -7,13 +7,17 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controller.ParticipanteController;
 import controller.ScreenController;
+import model.Participante;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Font;
@@ -21,6 +25,7 @@ import java.awt.Font;
 public class ParticipanteScreen extends JFrame {
 
 	private JPanel contentPane;
+	JList participantes; 
 
 	/**
 	 * Launch the application.
@@ -43,7 +48,7 @@ public class ParticipanteScreen extends JFrame {
 	 */
 	public ParticipanteScreen() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 540, 365);
+		setBounds(100, 100, 740, 426);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.LIGHT_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -51,14 +56,15 @@ public class ParticipanteScreen extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblParticipantes = new JLabel("Participantes");
-		lblParticipantes.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblParticipantes.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblParticipantes.setBounds(91, 11, 171, 14);
 		contentPane.add(lblParticipantes);
 		
-		JList list = new JList();
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.setBounds(21, 36, 313, 220);
-		contentPane.add(list);
+		participantes = new JList<Participante>();
+		participantes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		participantes.setBounds(21, 36, 313, 220);
+		populateParticipantes();
+		contentPane.add(participantes);
 		
 		JButton btnCadastrarParticipante = new JButton("Cadastrar Participante");
 		btnCadastrarParticipante.setToolTipText("Cadastro de novo participante");
@@ -70,7 +76,7 @@ public class ParticipanteScreen extends JFrame {
 				ScreenController.getInstance().showCadastroScreen();
 			}
 		});
-		btnCadastrarParticipante.setBounds(344, 33, 170, 23);
+		btnCadastrarParticipante.setBounds(515, 33, 170, 23);
 		contentPane.add(btnCadastrarParticipante);
 		
 		JButton btnEditarParticipante = new JButton("Editar Participante");
@@ -79,23 +85,25 @@ public class ParticipanteScreen extends JFrame {
 		btnEditarParticipante.setForeground(Color.WHITE);
 		btnEditarParticipante.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				populateParticipantes();
+				repaint();
 			}
 		});
-		btnEditarParticipante.setBounds(344, 67, 170, 23);
+		btnEditarParticipante.setBounds(515, 67, 170, 23);
 		contentPane.add(btnEditarParticipante);
 		
 		JButton btnRemoverParticipante = new JButton("Remover Participante");
 		btnRemoverParticipante.setToolTipText("Remove participante da listagem, apagando sua conta e hist\u00F3rico.");
 		btnRemoverParticipante.setForeground(Color.WHITE);
 		btnRemoverParticipante.setBackground(Color.DARK_GRAY);
-		btnRemoverParticipante.setBounds(344, 101, 170, 23);
+		btnRemoverParticipante.setBounds(515, 101, 170, 23);
 		contentPane.add(btnRemoverParticipante);
 		
 		JButton btnAcessarConta = new JButton("Acessar Conta");
 		btnAcessarConta.setToolTipText("Acesso \u00E0 conta para opera\u00E7\u00F5es de resgate, contribui\u00E7\u00E3o, e para resgate.");
 		btnAcessarConta.setBackground(Color.DARK_GRAY);
 		btnAcessarConta.setForeground(Color.WHITE);
-		btnAcessarConta.setBounds(344, 135, 170, 23);
+		btnAcessarConta.setBounds(515, 135, 170, 23);
 		contentPane.add(btnAcessarConta);
 		
 		JButton btnVoltar = new JButton("Voltar");
@@ -107,7 +115,22 @@ public class ParticipanteScreen extends JFrame {
 				ScreenController.getInstance().showMainScreen();
 			}
 		});
-		btnVoltar.setBounds(429, 279, 85, 23);
+		btnVoltar.setBounds(600, 358, 85, 23);
 		contentPane.add(btnVoltar);
+		populateParticipantes();
+	}
+	public void populateParticipantes() {
+		DefaultListModel<Participante> dlm = new DefaultListModel<Participante>();
+		ArrayList<Participante> parts = ParticipanteController.getInstance().getParticipantes();
+		for(Participante p : parts ){
+		 dlm.addElement(p);
+		}   
+		participantes = new JList<Participante>(dlm);
+		participantes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		participantes.setBounds(21, 36, 484, 345);
+		contentPane.add(participantes);
+		System.out.println(participantes.getModel().toString()); //TO TEST if Jlist successfully added catalogo      
+
+		
 	}
 }

@@ -6,6 +6,7 @@ public class MainController {
 	
 	ScreenController screenController;
 	JdbcController jdbcController;
+	ParticipanteController participanteController;
 	private static final MainController instance = new MainController();
 
 	
@@ -14,6 +15,7 @@ public class MainController {
 		screenController = new ScreenController();
 		jdbcController = new JdbcController();
 		jdbcController.jdbcConnect();
+		participanteController = new ParticipanteController();
 	}
 	//método para retornar instância do objeto
 	public static MainController getInstance() {
@@ -28,6 +30,17 @@ public class MainController {
 	}
 	public Connection getConnection() {
 		return jdbcController.getConnection();
+	}
+	public long insertParticipante(String text) {
+		// TODO Auto-generated method stub
+		return jdbcController.insertParticipante(text);
+	}
+	public void test() {
+		jdbcController.test();
+	}
+	public void newParticipante(int idParticipante, Date dataCadastro, String nomeParticipante, int idConta) {
+		participanteController.newParticipante(idParticipante, dataCadastro, nomeParticipante, idConta);
+		
 	}
 
 }

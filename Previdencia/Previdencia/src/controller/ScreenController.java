@@ -34,4 +34,14 @@ public class ScreenController {
 		
 	}
 
+	public long insertParticipante(String text) {
+		return MainController.getInstance().insertParticipante(text);
+		
+	}
+
+	public void populateParticipantes() {
+		participanteScreen.populateParticipantes();
+		
+	}
+
 }

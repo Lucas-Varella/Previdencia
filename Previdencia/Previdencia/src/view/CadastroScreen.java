@@ -24,7 +24,6 @@ public class CadastroScreen extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField tfNome;
-	private JTextField tfDataNascimento;
 
 	/**
 	 * Launch the application.
@@ -47,7 +46,7 @@ public class CadastroScreen extends JFrame {
 	 */
 	public CadastroScreen() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 540, 365);
+		setBounds(100, 100, 540, 307);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.LIGHT_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -59,32 +58,28 @@ public class CadastroScreen extends JFrame {
 		lblCadastroDeParticipante.setBounds(160, 11, 226, 50);
 		contentPane.add(lblCadastroDeParticipante);
 		
-		JLabel lblPreenchaTodosOs = new JLabel("Preencha todos os campos para continuar.");
-		lblPreenchaTodosOs.setBounds(48, 57, 336, 14);
-		contentPane.add(lblPreenchaTodosOs);
-		
 		tfNome = new JTextField();
-		tfNome.setBounds(170, 79, 200, 20);
+		tfNome.setBounds(160, 65, 200, 20);
 		contentPane.add(tfNome);
 		tfNome.setColumns(10);
 		
 		JLabel lblNome = new JLabel("Nome: ");
-		lblNome.setBounds(48, 82, 121, 14);
+		lblNome.setBounds(105, 68, 55, 14);
 		contentPane.add(lblNome);
 		
-		JLabel lblDataDeNascimento = new JLabel("Data de Nascimento:");
-		lblDataDeNascimento.setBounds(48, 107, 121, 14);
-		contentPane.add(lblDataDeNascimento);
-		
-		tfDataNascimento = new JTextField();
-		tfDataNascimento.setBounds(170, 104, 200, 20);
-		contentPane.add(tfDataNascimento);
-		tfDataNascimento.setColumns(10);
-		
 		JButton btnConfirmar = new JButton("Confirmar");
+		btnConfirmar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				long idConta = ScreenController.getInstance().insertParticipante(tfNome.getText());
+				JOptionPane.showMessageDialog(null, "Criado Participante '"+ tfNome.getText() +"', atribuída conta número "+idConta+".");
+				tfNome.setText("");
+				setVisible(false);
+				ScreenController.getInstance().showParticipanteScreen();
+			}
+		});
 		btnConfirmar.setForeground(Color.WHITE);
 		btnConfirmar.setBackground(Color.DARK_GRAY);
-		btnConfirmar.setBounds(170, 173, 101, 23);
+		btnConfirmar.setBounds(142, 118, 101, 23);
 		contentPane.add(btnConfirmar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
@@ -98,7 +93,7 @@ public class CadastroScreen extends JFrame {
 		});
 		btnCancelar.setForeground(Color.WHITE);
 		btnCancelar.setBackground(Color.DARK_GRAY);
-		btnCancelar.setBounds(269, 173, 101, 23);
+		btnCancelar.setBounds(253, 118, 101, 23);
 		contentPane.add(btnCancelar);
 	}
 }

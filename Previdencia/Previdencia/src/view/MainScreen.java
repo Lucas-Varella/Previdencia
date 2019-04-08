@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controller.JdbcController;
 import controller.ScreenController;
 
 import javax.swing.JLabel;
@@ -59,7 +60,9 @@ public class MainScreen extends JFrame {
 		btnParticipantes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
+				JdbcController.getInstance().loadParticipantes();
 				ScreenController.getInstance().showParticipanteScreen();
+				ScreenController.getInstance().populateParticipantes();
 			}
 		});
 		btnParticipantes.setBounds(24, 49, 388, 161);

@@ -4,26 +4,26 @@ import java.sql.Date;
 
 public class Resgate {
 	
-	private int idResgate;
+	private long idResgate;
 	private Date dataResgate;
-	private int idConta;
+	private long idConta;
 	private double valor;
 	private String tipoResgate;
-	private int numeroParcelas;
+	private long numeroParcelas;
 	
-	public Resgate(int idConta, double valor, String tipoResgate, int numeroParcelas) {
+	public Resgate(long idConta, double valor, String tipoResgate, long numeroParcelas) {
 		this.idConta = idConta;
 		this.valor = valor;
 		this.tipoResgate = tipoResgate;
 		this.numeroParcelas = numeroParcelas;
 	}
-	public int getIdResgate() {
+	public long getIdResgate() {
 		return this.idResgate;
 	}
 	public Date getDataResgate() {
 		return this.dataResgate;
 	}
-	public int getIdConta() {
+	public long getIdConta() {
 		return this.idConta;		
 	}
 	public double getValor() {
@@ -32,7 +32,7 @@ public class Resgate {
 	public String getTipoResgate() {
 		return this.tipoResgate;
 	}
-	public int getNumeroParcelas() {
+	public long getNumeroParcelas() {
 		return this.numeroParcelas;
 	}
 	

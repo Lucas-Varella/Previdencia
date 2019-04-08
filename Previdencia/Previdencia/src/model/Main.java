@@ -2,6 +2,7 @@ package model;
 
 import controller.JdbcController;
 import controller.MainController;
+import controller.ParticipanteController;
 
 public class Main {
 
@@ -9,6 +10,8 @@ public class Main {
 		//instancia controlador principal, mostra tela principal
 		MainController mainController = new MainController();
 		mainController.showMainScreen();
+		mainController.test();
+		System.out.println(ParticipanteController.getInstance().getParticipantes().size());
 	}
 
 }
