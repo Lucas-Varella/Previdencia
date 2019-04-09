@@ -52,7 +52,7 @@ public class ContaScreen extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblConta = new JLabel("Conta: "+conta.getIdConta());
+		JLabel lblConta = new JLabel("Conta: "+conta.getIdConta()+"    |    Criada em "+conta.getDataCadastro());
 		lblConta.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblConta.setBounds(84, 11, 278, 39);
 		contentPane.add(lblConta);
