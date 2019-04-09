@@ -1,5 +1,7 @@
 package model;
 
+import java.sql.Date;
+
 import controller.JdbcController;
 import controller.MainController;
 import controller.ParticipanteController;
@@ -10,6 +12,7 @@ public class Main {
 		//instancia controlador principal, mostra tela principal
 		MainController mainController = new MainController();
 		mainController.showMainScreen();
+		
 	}
 
 }

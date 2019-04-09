@@ -130,13 +130,18 @@ public class ResgateScreen extends JFrame {
 				try {
 					Double.parseDouble(tfValor.getText());
 					try {
-						if(!JdbcController.getInstance().resgatar(conta, (String)cbTipo.getSelectedItem(), Double.parseDouble(tfValor.getText()), Integer.parseInt(tfParcelas.getText()))) {
-						    JOptionPane.showMessageDialog(null, "Não há saldo suficiente para resgate!", "Atenção", JOptionPane.WARNING_MESSAGE, null);
+						if(!((String)cbTipo.getSelectedItem().equals("NORMAL" && !JdbcController.getInstance().validateResgateNormal(conta.getIdConta())))) {
+							if(!JdbcController.getInstance().resgatar(conta, (String)cbTipo.getSelectedItem(), Double.parseDouble(tfValor.getText()), Integer.parseInt(tfParcelas.getText()))) {
+							    JOptionPane.showMessageDialog(null, "Não há saldo suficiente para resgate!", "Atenção", JOptionPane.WARNING_MESSAGE, null);
+							}else {
+							    JOptionPane.showMessageDialog(null, "Resgatado valor de R$"+Double.parseDouble(tfValor.getText())+"0 Do saldo de "+(String)cbTipo.getSelectedItem()+".");
+							    setVisible(false);
+							    ScreenController.getInstance().showContaScreen(JdbcController.getInstance().findContaById(conta.getIdConta()));
+							}
 						}else {
-						    JOptionPane.showMessageDialog(null, "Resgatado valor de R$"+Double.parseDouble(tfValor.getText())+"0 Do saldo de "+(String)cbTipo.getSelectedItem()+".");
-						    setVisible(false);
-						    ScreenController.getInstance().showContaScreen(JdbcController.getInstance().findContaById(conta.getIdConta()));
+							
 						}
+						
 					}catch(NumberFormatException e3) {
 					    JOptionPane.showMessageDialog(null, "Favor informar somente numeros inteiros em Numero de Parcelas.");
 

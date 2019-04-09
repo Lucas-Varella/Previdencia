@@ -1,6 +1,8 @@
 package controller;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import model.Conta;
@@ -100,6 +102,7 @@ public class JdbcController {
 		return 0;
 	}
 	
+	//retorna um arrayList atualizado de Participantes
 	public ArrayList<Participante> loadParticipantes() {
 		ArrayList<Participante> parts = new ArrayList<>();
 		int idParticipante;
@@ -140,7 +143,7 @@ public class JdbcController {
 		}
 		
 	}
-
+	
 	public void editParticipante(Participante part, String nomeParticipante, String situacaoParticipante) {
 		try {
 			Statement st = con.createStatement();
@@ -151,7 +154,7 @@ public class JdbcController {
 		}
 		
 	}
-
+	
 	public Conta findContaById(int idConta) {
 		Conta conta = null;
 		try {
@@ -189,7 +192,7 @@ public class JdbcController {
 		}
 		return part;
 	}
-
+	//Atualiza valor de saldo de acordo com contribuição
 	public int contribuir(Conta conta, String tipoContribuicao, Double valor) {
 		try {
 			Statement st = con.createStatement();
@@ -212,56 +215,34 @@ public class JdbcController {
 		return 0;
 		
 	}
-//
-//	public ArrayList<Contribuicao> loadContribuicoes(int idConta) {
-//		ArrayList<Contribuicao> contrs = new ArrayList<>();
-//		int idContribuicao;
-//		Date dataContribuicao;
-//		double valorContribuicao;
-//		String tipoContribuicao;
-//		try {
-//			Statement st = con.createStatement();
-//			ResultSet rs = st.executeQuery("SELECT * FROM Contribuicao WHERE idConta ="+idConta);
-//			while(rs.next()) {
-//				idContribuicao = rs.getInt("idContribuicao");
-//				dataContribuicao = rs.getDate("dataContribuicao");
-//				tipoContribuicao = rs.getString("tipoContribuicao");
-//				valorContribuicao = rs.getDouble("valorContribuicao");
-//				Contribuicao contr = new Contribuicao(idContribuicao, dataContribuicao, idConta, valorContribuicao, tipoContribuicao);
-//				contrs.add(contr);
-//			}
-//			return contrs;
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return contrs;
-//	}
-
+	
 	public boolean resgatar(Conta conta, String tipoResgate, double valor, int numeroParcelas) {
 		Participante part = findParticipanteByContaId(conta.getIdConta());
 		try {
 			Statement st = con.createStatement();
-			switch(tipoResgate) {
-			case "PORTABILIDADE" :
-				if(conta.getSaldoPortabilidade() < valor) {
-					return false;
+				switch(tipoResgate) {
+				case "PORTABILIDADE" :
+					if(conta.getSaldoPortabilidade() < valor) {
+						return false;
+					}
+					st.execute("UPDATE CONTA SET saldoPortabilidade ="+(conta.getSaldoPortabilidade()-valor)+" WHERE idConta = "+conta.getIdConta());	
+					st.execute("INSERT INTO RESGATE (idConta, valorResgate, tipoResgate, numeroParcelas) VALUES("+conta.getIdConta()+","+valor+","+tipoResgate+","+numeroParcelas+")");
+					return true;
+				case "ADICIONAL" :
+					if(conta.getSaldoContribuicoesAdicionais() < valor) {
+						return false;
+					}
+					st.execute("UPDATE CONTA SET saldoContribuicoesAdicionais ="+(conta.getSaldoContribuicoesAdicionais()-valor)+" WHERE idConta = "+conta.getIdConta());		
+					st.execute("INSERT INTO RESGATE (idConta, valorResgate, tipoResgate, numeroParcelas) VALUES("+conta.getIdConta()+","+valor+","+tipoResgate+","+numeroParcelas+")");
+					return true;
+				case "NORMAL" :
+					if(conta.getSaldoContribuicoesNormais() < valor) {
+						return false;
+					}
+					st.execute("UPDATE CONTA SET saldoContribuicoesNormais ="+(conta.getSaldoContribuicoesNormais()-valor)+" WHERE idConta = "+conta.getIdConta());		
+					st.execute("INSERT INTO RESGATE (idConta, valorResgate, tipoResgate, numeroParcelas) VALUES("+conta.getIdConta()+","+valor+","+tipoResgate+","+numeroParcelas+")");
+					return true;
 				}
-				st.execute("UPDATE CONTA SET saldoPortabilidade ="+(conta.getSaldoPortabilidade()-valor)+" WHERE idConta = "+conta.getIdConta());		
-				return true;
-			case "ADICIONAL" :
-				if(conta.getSaldoContribuicoesAdicionais() < valor) {
-					return false;
-				}
-				st.execute("UPDATE CONTA SET saldoContribuicoesAdicionais ="+(conta.getSaldoContribuicoesAdicionais()-valor)+" WHERE idConta = "+conta.getIdConta());		
-				return true;
-			case "NORMAL" :
-				if(conta.getSaldoContribuicoesNormais() < valor) {
-					return false;
-				}
-				st.execute("UPDATE CONTA SET saldoContribuicoesNormais ="+(conta.getSaldoContribuicoesNormais()-valor)+" WHERE idConta = "+conta.getIdConta());		
-				return true;
-			}
 			
 			
 		}catch (SQLException e) {
@@ -289,6 +270,20 @@ public class JdbcController {
 			e.printStackTrace();
 		}
 		return part;
+	}
+
+	public boolean validateResgateNormal(int idConta) {
+		try {
+			Statement st = con.createStatement();
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			long time = System.currentTimeMillis();
+			Date date = new Date(time);
+			date.setYear(date.getYear()-3);
+			ResultSet rs = st.executeQuery("SELECT * FROM RESGATE WHERE idConta = "+idConta+" AND dataResgate >" )
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	
