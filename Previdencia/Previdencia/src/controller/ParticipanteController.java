@@ -13,8 +13,8 @@ public class ParticipanteController {
 	public ParticipanteController() {
 		this.participantes = JdbcController.getInstance().loadParticipantes();
 	}
-	public void newParticipante(int idParticipante, Date dataCadastro, String nomeParticipante, int idConta) {
-		Participante participante = new Participante(idParticipante, dataCadastro, nomeParticipante, idConta);
+	public void newParticipante(int idParticipante, Date dataCadastro, String nomeParticipante, int idConta, String situacaoParticipante) {
+		Participante participante = new Participante(idParticipante, dataCadastro, nomeParticipante, idConta, situacaoParticipante);
 		this.participantes.add(participante);
 	}
 	public ArrayList<Participante> getParticipantes() {
@@ -27,9 +27,10 @@ public class ParticipanteController {
 		this.participantes.remove(part);
 		
 	}
-	public void editParticipante(Participante part, String text) {
+	public void editParticipante(Participante part, String nomeParticipante, String situacaoParticipante) {
 		participantes.remove(part);
-		part.setNomeParticipante(text);
+		part.setNomeParticipante(nomeParticipante);
+		part.setSituacaoParticipante(situacaoParticipante);
 		participantes.add(part);
 		
 		

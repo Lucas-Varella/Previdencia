@@ -7,16 +7,18 @@ import controller.JdbcController;
 
 public class Participante {
 	
-	private long idParticipante;
+	private int idParticipante;
 	private Date dataCriacao;
 	private String nomeParticipante;
-	private long idConta;
+	private int idConta;
+	private String situacaoParticipante;
 	
-	public Participante(int idParticipante, Date dataCriacao, String nomeParticipante, int idConta) {
+	public Participante(int idParticipante, Date dataCriacao, String nomeParticipante, int idConta, String situacaoParticipante) {
 		this.idParticipante = idParticipante;
 		this.dataCriacao = dataCriacao;
 		this.nomeParticipante = nomeParticipante;
 		this.idConta = idConta;
+		this.situacaoParticipante = situacaoParticipante;
 		
 	}
 
@@ -33,12 +35,18 @@ public class Participante {
 	public String getNomeParticipante() {
 		return this.nomeParticipante;
 	}
-	public long getIdConta() {
+	public void setSituacaoParticipante(String situacaoParticipante) {
+		this.situacaoParticipante = situacaoParticipante;
+	}
+	public String getSituacaoParticipante() {
+		return this.situacaoParticipante;
+	}
+	public int getIdConta() {
 		return this.idConta;
 	}
 	@Override
 	public String toString() {
-		return "ID: "+this.idParticipante+" Nome Participante: "+this.nomeParticipante+" Data de Criacao: "+this.dataCriacao+" ID Conta: "+this.idConta;
+		return "ID: "+this.idParticipante+" Nome Participante: "+this.nomeParticipante+" Data de Criacao: "+this.dataCriacao+" ID Conta: "+this.idConta+" Situacao: "+this.situacaoParticipante;
 	}
 
 }

@@ -19,6 +19,8 @@ import java.awt.List;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class CadastroScreen extends JFrame {
 
@@ -64,13 +66,18 @@ public class CadastroScreen extends JFrame {
 		tfNome.setColumns(10);
 		
 		JLabel lblNome = new JLabel("Nome: ");
-		lblNome.setBounds(105, 68, 55, 14);
+		lblNome.setBounds(82, 68, 78, 14);
 		contentPane.add(lblNome);
+		
+		JComboBox<String> cbTipo = new JComboBox();
+		cbTipo.setModel(new DefaultComboBoxModel(new String[] {"ATIVO", "VINCULADO", "SUSPENSO"}));
+		cbTipo.setBounds(160, 87, 200, 20);
+		contentPane.add(cbTipo);
 		
 		JButton btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				long idConta = ScreenController.getInstance().insertParticipante(tfNome.getText());
+				long idConta = ScreenController.getInstance().insertParticipante(tfNome.getText(), (String)cbTipo.getSelectedItem());
 				JOptionPane.showMessageDialog(null, "Criado Participante '"+ tfNome.getText() +"', atribuida conta numero "+idConta+".");
 				tfNome.setText("");
 				setVisible(false);
@@ -97,5 +104,11 @@ public class CadastroScreen extends JFrame {
 		btnCancelar.setBackground(Color.DARK_GRAY);
 		btnCancelar.setBounds(253, 118, 101, 23);
 		contentPane.add(btnCancelar);
+		
+		JLabel lblSituao = new JLabel("Situa\u00E7\u00E3o: ");
+		lblSituao.setBounds(82, 93, 69, 14);
+		contentPane.add(lblSituao);
+		
+
 	}
 }

@@ -10,7 +10,6 @@ public class Main {
 		//instancia controlador principal, mostra tela principal
 		MainController mainController = new MainController();
 		mainController.showMainScreen();
-		mainController.test();
 	}
 
 }

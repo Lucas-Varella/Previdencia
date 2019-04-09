@@ -82,7 +82,7 @@ public class ParticipanteScreen extends JFrame {
 				ScreenController.getInstance().showCadastroScreen();
 			}
 		});
-		btnCadastrarParticipante.setBounds(515, 33, 170, 23);
+		btnCadastrarParticipante.setBounds(544, 33, 170, 23);
 		contentPane.add(btnCadastrarParticipante);
 		
 		JButton btnEditarParticipante = new JButton("Editar Participante");
@@ -100,7 +100,7 @@ public class ParticipanteScreen extends JFrame {
 				
 			}
 		});
-		btnEditarParticipante.setBounds(515, 67, 170, 23);
+		btnEditarParticipante.setBounds(544, 67, 170, 23);
 		contentPane.add(btnEditarParticipante);
 		
 		JButton btnRemoverParticipante = new JButton("Remover Participante");
@@ -120,14 +120,28 @@ public class ParticipanteScreen extends JFrame {
 		btnRemoverParticipante.setToolTipText("Remove participante da listagem, apagando sua conta e hist\u00F3rico.");
 		btnRemoverParticipante.setForeground(Color.WHITE);
 		btnRemoverParticipante.setBackground(Color.DARK_GRAY);
-		btnRemoverParticipante.setBounds(515, 101, 170, 23);
+		btnRemoverParticipante.setBounds(544, 101, 170, 23);
 		contentPane.add(btnRemoverParticipante);
 		
 		JButton btnAcessarConta = new JButton("Acessar Conta");
+		btnAcessarConta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(participantes.getSelectedValue() != null) {
+					setVisible(false);
+					Participante part = (Participante)participantes.getSelectedValue();
+					ScreenController.getInstance().showContaScreen(JdbcController.getInstance().findContaById(part.getIdConta()));
+				} else {
+					JOptionPane.showMessageDialog(null, "Favor selecionar Participante para acesso a conta.");
+
+				}				
+				
+				
+			}
+		});
 		btnAcessarConta.setToolTipText("Acesso a conta para operacoes de contribuicao, e para resgate.");
 		btnAcessarConta.setBackground(Color.DARK_GRAY);
 		btnAcessarConta.setForeground(Color.WHITE);
-		btnAcessarConta.setBounds(515, 135, 170, 23);
+		btnAcessarConta.setBounds(544, 135, 170, 23);
 		contentPane.add(btnAcessarConta);
 		
 		JButton btnVoltar = new JButton("Voltar");
@@ -139,7 +153,7 @@ public class ParticipanteScreen extends JFrame {
 				ScreenController.getInstance().showMainScreen();
 			}
 		});
-		btnVoltar.setBounds(600, 358, 85, 23);
+		btnVoltar.setBounds(629, 358, 85, 23);
 		contentPane.add(btnVoltar);
 		populateParticipantes();
 	}
@@ -152,7 +166,7 @@ public class ParticipanteScreen extends JFrame {
 		}   
 		participantes = new JList<Participante>(dlm);
 		participantes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		participantes.setBounds(21, 36, 484, 345);
+		participantes.setBounds(21, 36, 513, 345);
 		contentPane.add(participantes);
 		this.repaint();
 

@@ -3,6 +3,7 @@ package controller;
 import java.sql.*;
 import java.util.ArrayList;
 
+import model.Conta;
 import model.Participante;
 
 public class JdbcController {
@@ -37,17 +38,7 @@ public class JdbcController {
 	public static JdbcController getInstance() {
 		return instance;
 	}
-	public void createParticipante(Date dataNascimento, String nomeParticipante) {
-		try {
-			Statement st = con.createStatement();
-			//st.execute("INSERT longO PARTICIPANTE VALUES (")
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-	}
+
 	public long createConta() {
 		try {
 			Statement st = con.createStatement();
@@ -82,7 +73,7 @@ public class JdbcController {
 		}
 		return null;
 	}
-	public long insertParticipante(String nomeParticipante) {
+	public long insertParticipante(String nomeParticipante, String situacaoParticipante) {
 		try {
 			Statement st = con.createStatement();
 			st.execute("INSERT INTO CONTA (saldoPortabilidade, saldoContribuicoesAdicionais, saldoContribuicoesNormais) VALUES (0, 0, 0)");
@@ -92,12 +83,12 @@ public class JdbcController {
 				idConta = rs.getInt("idConta");
 			}
 			
-			st.execute("INSERT INTO PARTICIPANTE (nomeParticipante, idConta) VALUES ('"+nomeParticipante+"',"+idConta+")");
+			st.execute("INSERT INTO PARTICIPANTE (nomeParticipante, idConta, situacaoParticipante) VALUES ('"+nomeParticipante+"',"+idConta+", '"+situacaoParticipante+"')");
 			ResultSet rsPart = st.executeQuery("SELECT * FROM PARTICIPANTE WHERE IDCONTA = "+idConta);
 			if(rsPart.next()) {
 				int idParticipante = rsPart.getInt("idParticipante");
 				Date dataCriacao = rsPart.getDate("dataCriacao");
-				MainController.getInstance().newParticipante(idParticipante, dataCriacao, nomeParticipante, idConta);
+				MainController.getInstance().newParticipante(idParticipante, dataCriacao, nomeParticipante, idConta, situacaoParticipante);
 			}
 			
 			return idConta;
@@ -106,23 +97,14 @@ public class JdbcController {
 		}
 		return 0;
 	}
-	public void test() {
-		try {
-			ResultSet rs = con.createStatement().executeQuery("SELECT * FROM CONTA");
-			while(rs.next()) {
-				System.out.println(rs.getInt("idConta"));
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
+	
 	public ArrayList<Participante> loadParticipantes() {
 		ArrayList<Participante> parts = new ArrayList<>();
 		int idParticipante;
 		Date dataCriacao;
 		String nomeParticipante;
 		int idConta;
+		String situacaoParticipante;
 		try {
 			Statement st = con.createStatement();
 			ResultSet rs = st.executeQuery("SELECT * FROM PARTICIPANTE");
@@ -131,7 +113,8 @@ public class JdbcController {
 				dataCriacao = rs.getDate("dataCriacao");
 				nomeParticipante = rs.getString("nomeParticipante");
 				idConta = rs.getInt("idConta");
-				Participante part = new Participante(idParticipante, dataCriacao, nomeParticipante, idConta);
+				situacaoParticipante = rs.getString("situacaoParticipante");
+				Participante part = new Participante(idParticipante, dataCriacao, nomeParticipante, idConta, situacaoParticipante);
 				parts.add(part);
 			}
 			return parts;
@@ -156,15 +139,53 @@ public class JdbcController {
 		
 	}
 
-	public void editParticipante(Participante part, String text) {
+	public void editParticipante(Participante part, String nomeParticipante, String situacaoParticipante) {
 		try {
 			Statement st = con.createStatement();
-			st.execute("UPDATE PARTICIPANTE SET nomeParticipante ='"+text+"' WHERE idParticipante ="+part.getIdParticipante());
-			ParticipanteController.getInstance().editParticipante(part,text);
+			st.execute("UPDATE PARTICIPANTE SET nomeParticipante ='"+nomeParticipante+"', situacaoParticipante = '"+situacaoParticipante+"' WHERE idParticipante ="+part.getIdParticipante());
+			ParticipanteController.getInstance().editParticipante(part,nomeParticipante,situacaoParticipante);
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
+	}
+
+	public Conta findContaById(int idConta) {
+		Conta conta = null;
+		try {
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM CONTA WHERE idConta ="+idConta);
+			if(rs.next()) {
+				Date dataCadastro = rs.getDate("dataCadastro");
+				double saldoPortabilidade = rs.getDouble("saldoPortabilidade");
+				double saldoContribuicoesAdicionais = rs.getDouble("saldoContribuicoesAdicionais");
+				double saldoContribuicoesNormais = rs.getDouble("saldoContribuicoesNormais");
+				conta = new Conta(idConta, dataCadastro, saldoPortabilidade, saldoContribuicoesAdicionais, saldoContribuicoesNormais);
+				return conta;
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return conta;
+	}
+
+	public Participante findParticipanteByContaId(int idConta) {
+		Participante part = null;
+		try {
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM Participante WHERE idConta ="+idConta);
+			if(rs.next()) {
+				int idParticipante = rs.getInt("idParticipante");
+				Date dataCriacao = rs.getDate("dataCriacao");
+				String nomeParticipante = rs.getString("nomeParticipante");
+				String situacaoParticipante = rs.getString("situacaoParticipante");
+				part = new Participante(idParticipante, dataCriacao, nomeParticipante, idConta, situacaoParticipante);
+				return part;
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return part;
 	}
 	
 	

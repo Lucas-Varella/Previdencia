@@ -20,6 +20,8 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class EditionScreen extends JFrame {
 
@@ -60,7 +62,7 @@ public class EditionScreen extends JFrame {
 		contentPane.add(lblEdicaoDeParticipante);
 		
 		JLabel lblNomeAntigo = new JLabel("Nome Antigo:");
-		lblNomeAntigo.setBounds(66, 68, 83, 14);
+		lblNomeAntigo.setBounds(52, 68, 97, 14);
 		contentPane.add(lblNomeAntigo);
 		
 		JLabel lblNomeantigo = new JLabel(part.getNomeParticipante());
@@ -68,7 +70,7 @@ public class EditionScreen extends JFrame {
 		contentPane.add(lblNomeantigo);
 		
 		JLabel lblNomeNovo = new JLabel("Nome Novo:");
-		lblNomeNovo.setBounds(66, 93, 83, 14);
+		lblNomeNovo.setBounds(52, 93, 97, 14);
 		contentPane.add(lblNomeNovo);
 		
 		tfName = new JTextField();
@@ -76,11 +78,16 @@ public class EditionScreen extends JFrame {
 		contentPane.add(tfName);
 		tfName.setColumns(10);
 		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"ATIVO", "VINCULADO", "SUSPENSO"}));
+		comboBox.setBounds(152, 115, 186, 20);
+		contentPane.add(comboBox);
+		
 		JButton btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JdbcController.getInstance().editParticipante(part, tfName.getText());
-				JOptionPane.showMessageDialog(null, "Editado Participante  de ID "+ part.getIdParticipante() +", com o nome: " + tfName.getText());
+				JdbcController.getInstance().editParticipante(part, tfName.getText(), (String)comboBox.getSelectedItem());
+				JOptionPane.showMessageDialog(null, "Editado Participante  de ID "+ part.getIdParticipante() +", com o nome: " + tfName.getText()+" e Situacao "+(String)comboBox.getSelectedItem());
 				setVisible(false);
 				ScreenController.getInstance().showParticipanteScreen();
 			}
@@ -100,5 +107,11 @@ public class EditionScreen extends JFrame {
 		});
 		btnCancelar.setBounds(249, 147, 89, 23);
 		contentPane.add(btnCancelar);
+		
+		JLabel lblSituaoNova = new JLabel("Situa\u00E7\u00E3o Nova:");
+		lblSituaoNova.setBounds(52, 118, 97, 14);
+		contentPane.add(lblSituaoNova);
+		
+		
 	}
 }

@@ -7,20 +7,18 @@ import controller.JdbcController;
 
 public class Conta {
 	
-	private long idConta;
+	private int idConta;
 	private Date dataCadastro;
 	private double saldoPortabilidade = 0;
 	private double saldoContribuicoesAdicionais = 0;
 	private double saldoContribuicoesNormais = 0;
 	
-	public Conta() {
-		long idConta = JdbcController.getInstance().createConta();
-		try {
-			this.dataCadastro = JdbcController.getInstance().executeQuery("SELECT dataCadastro FROM CONTA WHERE idConta = " +idConta).getDate(0);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public Conta(int idConta, Date dataCadastro, double saldoPortabilidade, double saldoContribuicoesAdicionais, double saldoContribuicoesNormais) {
+		this.idConta = idConta;
+		this.dataCadastro = dataCadastro;
+		this.saldoPortabilidade = saldoPortabilidade;
+		this.saldoContribuicoesAdicionais = saldoContribuicoesAdicionais;
+		this.saldoContribuicoesNormais = saldoContribuicoesNormais;
 	}
 	public void modSaldoPortabilidade(double valor) {
 		this.saldoPortabilidade += valor;
@@ -44,7 +42,7 @@ public class Conta {
 	public Date getDataCadastro() {
 		return this.dataCadastro;
 	}
-	public long getIdConta() {
+	public int getIdConta() {
 		return this.idConta;
 	}
 

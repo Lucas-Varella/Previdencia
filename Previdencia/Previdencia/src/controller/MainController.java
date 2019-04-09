@@ -34,15 +34,13 @@ public class MainController {
 	public Connection getConnection() {
 		return jdbcController.getConnection();
 	}
-	public long insertParticipante(String text) {
+	public long insertParticipante(String nomeParticipante, String situacaoParticipante) {
 		// TODO Auto-generated method stub
-		return jdbcController.insertParticipante(text);
+		return jdbcController.insertParticipante(nomeParticipante, situacaoParticipante);
 	}
-	public void test() {
-		jdbcController.test();
-	}
-	public void newParticipante(int idParticipante, Date dataCadastro, String nomeParticipante, int idConta) {
-		participanteController.newParticipante(idParticipante, dataCadastro, nomeParticipante, idConta);
+	
+	public void newParticipante(int idParticipante, Date dataCadastro, String nomeParticipante, int idConta, String situacaoParticipante) {
+		participanteController.newParticipante(idParticipante, dataCadastro, nomeParticipante, idConta, situacaoParticipante);
 		
 	}
 
