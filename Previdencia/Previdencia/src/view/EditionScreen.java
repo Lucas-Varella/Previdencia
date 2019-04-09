@@ -69,7 +69,7 @@ public class EditionScreen extends JFrame {
 		lblNomeantigo.setBounds(152, 68, 186, 14);
 		contentPane.add(lblNomeantigo);
 		
-		JLabel lblNomeNovo = new JLabel("Nome Novo:");
+		JLabel lblNomeNovo = new JLabel("Nome :");
 		lblNomeNovo.setBounds(52, 93, 97, 14);
 		contentPane.add(lblNomeNovo);
 		
@@ -79,7 +79,7 @@ public class EditionScreen extends JFrame {
 		tfName.setColumns(10);
 		
 		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"ATIVO", "VINCULADO", "SUSPENSO"}));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"ATIVO", "CANCELADO", "BENEFICIO", "VINCULADO", "SUSPENSO"}));
 		comboBox.setBounds(152, 115, 186, 20);
 		contentPane.add(comboBox);
 		
@@ -108,7 +108,7 @@ public class EditionScreen extends JFrame {
 		btnCancelar.setBounds(249, 147, 89, 23);
 		contentPane.add(btnCancelar);
 		
-		JLabel lblSituaoNova = new JLabel("Situa\u00E7\u00E3o Nova:");
+		JLabel lblSituaoNova = new JLabel("Situa\u00E7\u00E3o :");
 		lblSituaoNova.setBounds(52, 118, 97, 14);
 		contentPane.add(lblSituaoNova);
 		

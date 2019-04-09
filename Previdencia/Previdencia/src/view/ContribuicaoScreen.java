@@ -64,6 +64,21 @@ public class ContribuicaoScreen extends JFrame {
 		contentPane.add(lblSaldoAtual);
 		
 		JComboBox cbTipo = new JComboBox();
+		cbTipo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switch((String)cbTipo.getSelectedItem()) {
+				case "PORTABILIDADE" :
+					lblSaldoAtual.setText("Saldo Atual(Portabilidade): R$"+conta.getSaldoPortabilidade()+"0");
+					break;
+				case "ADICIONAL" :
+					lblSaldoAtual.setText("Saldo Atual(Adicional): R$"+conta.getSaldoContribuicoesAdicionais()+"0");
+					break;
+				case "NORMAL" :
+					lblSaldoAtual.setText("Saldo Atual(Normal): R$"+conta.getSaldoContribuicoesNormais()+"0");
+					break;
+				}
+			}
+		});
 		cbTipo.setModel(new DefaultComboBoxModel(new String[] {"PORTABILIDADE", "ADICIONAL", "NORMAL"}));
 		cbTipo.setBounds(154, 70, 165, 20);
 		contentPane.add(cbTipo);
@@ -82,6 +97,8 @@ public class ContribuicaoScreen extends JFrame {
 		tfValor.setColumns(10);
 		
 		JButton btnConfirmar = new JButton("Confirmar");
+		btnConfirmar.setForeground(Color.WHITE);
+		btnConfirmar.setBackground(Color.DARK_GRAY);
 		btnConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -99,6 +116,8 @@ public class ContribuicaoScreen extends JFrame {
 		contentPane.add(btnConfirmar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.setBackground(Color.DARK_GRAY);
+		btnCancelar.setForeground(Color.WHITE);
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(0 == JOptionPane.showConfirmDialog(null, "Perdera os dados preenchidos. Tem Certeza?", "Confirmar", JOptionPane.YES_NO_OPTION)) {
