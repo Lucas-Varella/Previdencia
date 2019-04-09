@@ -102,7 +102,6 @@ public class ContribuicaoScreen extends JFrame {
 		btnConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-				    Double.parseDouble(tfValor.getText());
 				    JdbcController.getInstance().contribuir(conta, (String)cbTipo.getSelectedItem(), Double.parseDouble(tfValor.getText()));
 				    JOptionPane.showMessageDialog(null, "Contribuido valor de R$"+Double.parseDouble(tfValor.getText())+"0 Para o saldo de "+(String)cbTipo.getSelectedItem()+".");
 				    setVisible(false);

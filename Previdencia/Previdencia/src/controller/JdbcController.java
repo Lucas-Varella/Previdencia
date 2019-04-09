@@ -236,6 +236,40 @@ public class JdbcController {
 //		}
 //		return contrs;
 //	}
+
+	public boolean resgatar(Conta conta, String tipoResgate, double valor, int numeroParcelas) {
+		Participante part = findParticipanteByContaId(conta.getIdConta());
+		try {
+			Statement st = con.createStatement();
+			switch(tipoResgate) {
+			case "PORTABILIDADE" :
+				if(conta.getSaldoPortabilidade() < valor) {
+					return false;
+				}
+				st.execute("UPDATE CONTA SET saldoPortabilidade ="+(conta.getSaldoPortabilidade()-valor)+" WHERE idConta = "+conta.getIdConta());		
+				return true;
+			case "ADICIONAL" :
+				if(conta.getSaldoContribuicoesAdicionais() < valor) {
+					return false;
+				}
+				st.execute("UPDATE CONTA SET saldoContribuicoesAdicionais ="+(conta.getSaldoContribuicoesAdicionais()-valor)+" WHERE idConta = "+conta.getIdConta());		
+				return true;
+			case "NORMAL" :
+				if(conta.getSaldoContribuicoesNormais() < valor) {
+					return false;
+				}
+				st.execute("UPDATE CONTA SET saldoContribuicoesNormais ="+(conta.getSaldoContribuicoesNormais()-valor)+" WHERE idConta = "+conta.getIdConta());		
+				return true;
+			}
+			
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+		
+		
+	}
 	
 	
 	
