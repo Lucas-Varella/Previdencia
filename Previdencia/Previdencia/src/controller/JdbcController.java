@@ -24,7 +24,7 @@ public class JdbcController {
 		}
 		Connection con = null;
 		try {
-			con = DriverManager.getConnection("jdbc:filemaker://localhost:2399/Previdência","Admin", "admin");
+			con = DriverManager.getConnection("jdbc:filemaker://localhost:2399/PrevidÃªncia","Admin", "admin");
 			this.con = con;
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
@@ -140,6 +140,19 @@ public class JdbcController {
 			e.printStackTrace();
 		}
 		return parts;
+		
+	}
+
+	public void removeParticipante(Participante part) {
+		try {
+			Statement st = con.createStatement();
+			st.execute("DELETE FROM PARTICIPANTE WHERE idParticipante = "+part.getIdParticipante());
+			st.execute("DELETE FROM CONTA WHERE idConta = "+part.getIdConta());
+			ParticipanteController.getInstance().deleteParticipante(part);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	

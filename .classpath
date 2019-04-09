@@ -3,6 +3,5 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="Previdencia/Previdencia/src"/>
 	<classpathentry kind="lib" path="Previdencia/Previdencia/fmjdbc.jar"/>
-	<classpathentry kind="lib" path="C:/Users/lmvarella/git/Previdencia/Previdencia/Previdencia/fmjdbc.jar"/>
 	<classpathentry kind="output" path="Previdencia/Previdencia/bin"/>
 </classpath>

@@ -71,9 +71,10 @@ public class CadastroScreen extends JFrame {
 		btnConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				long idConta = ScreenController.getInstance().insertParticipante(tfNome.getText());
-				JOptionPane.showMessageDialog(null, "Criado Participante '"+ tfNome.getText() +"', atribuída conta número "+idConta+".");
+				JOptionPane.showMessageDialog(null, "Criado Participante '"+ tfNome.getText() +"', atribuida conta numero "+idConta+".");
 				tfNome.setText("");
 				setVisible(false);
+				ScreenController.getInstance().populateParticipantes();
 				ScreenController.getInstance().showParticipanteScreen();
 			}
 		});
@@ -85,8 +86,9 @@ public class CadastroScreen extends JFrame {
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(0 == JOptionPane.showConfirmDialog(null, "Perderá os dados preenchidos. Tem Certeza?", "Confirmar", JOptionPane.YES_NO_OPTION)) {
+				if(0 == JOptionPane.showConfirmDialog(null, "Perdera os dados preenchidos. Tem Certeza?", "Confirmar", JOptionPane.YES_NO_OPTION)) {
 					setVisible(false);
+					ScreenController.getInstance().populateParticipantes();
 					ScreenController.getInstance().showParticipanteScreen();
 				}
 			}

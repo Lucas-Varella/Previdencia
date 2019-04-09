@@ -7,7 +7,7 @@ public class MainController {
 	ScreenController screenController;
 	JdbcController jdbcController;
 	ParticipanteController participanteController;
-	private static final MainController instance = new MainController();
+	public static final MainController instance = new MainController();
 
 	
 	public MainController() {
@@ -17,7 +17,7 @@ public class MainController {
 		jdbcController.jdbcConnect();
 		participanteController = new ParticipanteController();
 	}
-	//método para retornar instância do objeto
+	//mï¿½todo para retornar instï¿½ncia do objeto
 	public static MainController getInstance() {
 		return instance;
 	}

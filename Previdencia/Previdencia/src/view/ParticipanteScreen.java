@@ -7,12 +7,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controller.JdbcController;
 import controller.ParticipanteController;
 import controller.ScreenController;
 import model.Participante;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -30,23 +32,26 @@ public class ParticipanteScreen extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ParticipanteScreen frame = new ParticipanteScreen();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					ParticipanteScreen frame = new ParticipanteScreen();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
 	 */
 	public ParticipanteScreen() {
+		initComponents();
+	}
+	private void initComponents() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 740, 426);
 		contentPane = new JPanel();
@@ -56,8 +61,9 @@ public class ParticipanteScreen extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblParticipantes = new JLabel("Participantes");
+		lblParticipantes.setBackground(Color.LIGHT_GRAY);
 		lblParticipantes.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblParticipantes.setBounds(91, 11, 171, 14);
+		lblParticipantes.setBounds(192, 11, 171, 14);
 		contentPane.add(lblParticipantes);
 		
 		participantes = new JList<Participante>();
@@ -93,6 +99,13 @@ public class ParticipanteScreen extends JFrame {
 		contentPane.add(btnEditarParticipante);
 		
 		JButton btnRemoverParticipante = new JButton("Remover Participante");
+		btnRemoverParticipante.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(0 == JOptionPane.showConfirmDialog(null, "Participante e Conta atribuida serao excluidos. Tem Certeza?", "Confirmar", JOptionPane.YES_NO_OPTION)) {
+					JdbcController.getInstance().removeParticipante((Participante)participantes.getSelectedValue());
+				}
+			}
+		});
 		btnRemoverParticipante.setToolTipText("Remove participante da listagem, apagando sua conta e hist\u00F3rico.");
 		btnRemoverParticipante.setForeground(Color.WHITE);
 		btnRemoverParticipante.setBackground(Color.DARK_GRAY);
@@ -120,6 +133,7 @@ public class ParticipanteScreen extends JFrame {
 		populateParticipantes();
 	}
 	public void populateParticipantes() {
+		contentPane.remove(participantes);
 		DefaultListModel<Participante> dlm = new DefaultListModel<Participante>();
 		ArrayList<Participante> parts = ParticipanteController.getInstance().getParticipantes();
 		for(Participante p : parts ){
@@ -129,7 +143,7 @@ public class ParticipanteScreen extends JFrame {
 		participantes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		participantes.setBounds(21, 36, 484, 345);
 		contentPane.add(participantes);
-		System.out.println(participantes.getModel().toString()); //TO TEST if Jlist successfully added catalogo      
+		this.repaint();
 
 		
 	}

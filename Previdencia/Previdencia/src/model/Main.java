@@ -11,7 +11,6 @@ public class Main {
 		MainController mainController = new MainController();
 		mainController.showMainScreen();
 		mainController.test();
-		System.out.println(ParticipanteController.getInstance().getParticipantes().size());
 	}
 
 }

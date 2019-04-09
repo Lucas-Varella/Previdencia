@@ -39,7 +39,8 @@ public class ScreenController {
 		
 	}
 
-	public void populateParticipantes() {
+	public void populateParticipantes()  {
+		participanteScreen = new ParticipanteScreen();
 		participanteScreen.populateParticipantes();
 		
 	}
