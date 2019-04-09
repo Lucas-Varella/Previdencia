@@ -24,7 +24,7 @@ public class JdbcController {
 		}
 		Connection con = null;
 		try {
-			con = DriverManager.getConnection("jdbc:filemaker://localhost:2399/Previdência","Admin", "admin");
+			con = DriverManager.getConnection("jdbc:filemaker://localhost:2399/Previdencia","Admin", "admin");
 			this.con = con;
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
@@ -151,6 +151,17 @@ public class JdbcController {
 			ParticipanteController.getInstance().deleteParticipante(part);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	public void editParticipante(Participante part, String text) {
+		try {
+			Statement st = con.createStatement();
+			st.execute("UPDATE PARTICIPANTE SET nomeParticipante ='"+text+"' WHERE idParticipante ="+part.getIdParticipante());
+			ParticipanteController.getInstance().editParticipante(part,text);
+		}catch (SQLException e) {
 			e.printStackTrace();
 		}
 		

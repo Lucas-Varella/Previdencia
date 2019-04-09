@@ -86,13 +86,18 @@ public class ParticipanteScreen extends JFrame {
 		contentPane.add(btnCadastrarParticipante);
 		
 		JButton btnEditarParticipante = new JButton("Editar Participante");
-		btnEditarParticipante.setToolTipText("Edita informa\u00E7\u00F5es cadastrais do participante.");
+		btnEditarParticipante.setToolTipText("Edita informacoes cadastrais do participante.");
 		btnEditarParticipante.setBackground(Color.DARK_GRAY);
 		btnEditarParticipante.setForeground(Color.WHITE);
 		btnEditarParticipante.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				populateParticipantes();
-				repaint();
+				if(participantes.getSelectedValue() != null) {
+					setVisible(false);
+					ScreenController.getInstance().showEditionScreen((Participante)participantes.getSelectedValue());
+				}else {
+					JOptionPane.showMessageDialog(null, "Favor selecionar Participante para edicao.");
+				}
+				
 			}
 		});
 		btnEditarParticipante.setBounds(515, 67, 170, 23);
@@ -101,8 +106,14 @@ public class ParticipanteScreen extends JFrame {
 		JButton btnRemoverParticipante = new JButton("Remover Participante");
 		btnRemoverParticipante.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(0 == JOptionPane.showConfirmDialog(null, "Participante e Conta atribuida serao excluidos. Tem Certeza?", "Confirmar", JOptionPane.YES_NO_OPTION)) {
-					JdbcController.getInstance().removeParticipante((Participante)participantes.getSelectedValue());
+				if(participantes.getSelectedValue() != null) {
+					if(0 == JOptionPane.showConfirmDialog(null, "Participante e Conta atribuida serao excluidos. Tem Certeza?", "Confirmar", JOptionPane.YES_NO_OPTION)) {
+						JdbcController.getInstance().removeParticipante((Participante)participantes.getSelectedValue());
+						populateParticipantes();
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Favor selecionar Participante para remocao.");
+
 				}
 			}
 		});
@@ -113,7 +124,7 @@ public class ParticipanteScreen extends JFrame {
 		contentPane.add(btnRemoverParticipante);
 		
 		JButton btnAcessarConta = new JButton("Acessar Conta");
-		btnAcessarConta.setToolTipText("Acesso \u00E0 conta para opera\u00E7\u00F5es de resgate, contribui\u00E7\u00E3o, e para resgate.");
+		btnAcessarConta.setToolTipText("Acesso a conta para operacoes de contribuicao, e para resgate.");
 		btnAcessarConta.setBackground(Color.DARK_GRAY);
 		btnAcessarConta.setForeground(Color.WHITE);
 		btnAcessarConta.setBounds(515, 135, 170, 23);

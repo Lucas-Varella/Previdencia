@@ -2,6 +2,7 @@ package controller;
 
 import java.awt.Window;
 
+import model.Participante;
 import view.*;
 
 public class ScreenController {
@@ -21,6 +22,7 @@ public class ScreenController {
 		mainScreen.setVisible(true);
 	}
 	public void showParticipanteScreen() {
+		participanteScreen.populateParticipantes();
 		participanteScreen.setVisible(true);
 	}
 
@@ -42,6 +44,12 @@ public class ScreenController {
 	public void populateParticipantes()  {
 		participanteScreen = new ParticipanteScreen();
 		participanteScreen.populateParticipantes();
+		
+	}
+
+	public void showEditionScreen(Participante selectedValue) {
+		EditionScreen edscr = new EditionScreen(selectedValue);
+		edscr.setVisible(true);
 		
 	}
 

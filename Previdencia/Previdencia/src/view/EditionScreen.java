@@ -7,23 +7,24 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controller.JdbcController;
 import controller.ScreenController;
+import model.Participante;
 
+import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
-import java.awt.Color;
 import javax.swing.JTextField;
-import java.awt.List;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class CadastroScreen extends JFrame {
+public class EditionScreen extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField tfNome;
+	private JTextField tfName;
 
 	/**
 	 * Launch the application.
@@ -32,7 +33,7 @@ public class CadastroScreen extends JFrame {
 //		EventQueue.invokeLater(new Runnable() {
 //			public void run() {
 //				try {
-//					CadastroScreen frame = new CadastroScreen();
+//					EditionScreen frame = new EditionScreen();
 //					frame.setVisible(true);
 //				} catch (Exception e) {
 //					e.printStackTrace();
@@ -44,48 +45,52 @@ public class CadastroScreen extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public CadastroScreen() {
+	public EditionScreen(Participante part) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 540, 307);
+		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.LIGHT_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblCadastroDeParticipante = new JLabel("Cadastro de Participante");
-		lblCadastroDeParticipante.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblCadastroDeParticipante.setBounds(160, 11, 226, 50);
-		contentPane.add(lblCadastroDeParticipante);
+		JLabel lblEdicaoDeParticipante = new JLabel("Edicao de Participante");
+		lblEdicaoDeParticipante.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblEdicaoDeParticipante.setBounds(119, 24, 290, 29);
+		contentPane.add(lblEdicaoDeParticipante);
 		
-		tfNome = new JTextField();
-		tfNome.setBounds(160, 65, 200, 20);
-		contentPane.add(tfNome);
-		tfNome.setColumns(10);
+		JLabel lblNomeAntigo = new JLabel("Nome Antigo:");
+		lblNomeAntigo.setBounds(66, 68, 83, 14);
+		contentPane.add(lblNomeAntigo);
 		
-		JLabel lblNome = new JLabel("Nome: ");
-		lblNome.setBounds(105, 68, 55, 14);
-		contentPane.add(lblNome);
+		JLabel lblNomeantigo = new JLabel(part.getNomeParticipante());
+		lblNomeantigo.setBounds(152, 68, 186, 14);
+		contentPane.add(lblNomeantigo);
+		
+		JLabel lblNomeNovo = new JLabel("Nome Novo:");
+		lblNomeNovo.setBounds(66, 93, 83, 14);
+		contentPane.add(lblNomeNovo);
+		
+		tfName = new JTextField();
+		tfName.setBounds(152, 90, 186, 20);
+		contentPane.add(tfName);
+		tfName.setColumns(10);
 		
 		JButton btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				long idConta = ScreenController.getInstance().insertParticipante(tfNome.getText());
-				JOptionPane.showMessageDialog(null, "Criado Participante '"+ tfNome.getText() +"', atribuida conta numero "+idConta+".");
-				tfNome.setText("");
+				JdbcController.getInstance().editParticipante(part, tfName.getText());
+				JOptionPane.showMessageDialog(null, "Editado Participante  de ID "+ part.getIdParticipante() +", com o nome: " + tfName.getText());
 				setVisible(false);
-				ScreenController.getInstance().populateParticipantes();
 				ScreenController.getInstance().showParticipanteScreen();
 			}
 		});
-		btnConfirmar.setForeground(Color.WHITE);
-		btnConfirmar.setBackground(Color.DARK_GRAY);
-		btnConfirmar.setBounds(142, 118, 101, 23);
+		btnConfirmar.setBounds(110, 147, 89, 23);
 		contentPane.add(btnConfirmar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent arg0) {
 				if(0 == JOptionPane.showConfirmDialog(null, "Perdera os dados preenchidos. Tem Certeza?", "Confirmar", JOptionPane.YES_NO_OPTION)) {
 					setVisible(false);
 					ScreenController.getInstance().populateParticipantes();
@@ -93,9 +98,7 @@ public class CadastroScreen extends JFrame {
 				}
 			}
 		});
-		btnCancelar.setForeground(Color.WHITE);
-		btnCancelar.setBackground(Color.DARK_GRAY);
-		btnCancelar.setBounds(253, 118, 101, 23);
+		btnCancelar.setBounds(249, 147, 89, 23);
 		contentPane.add(btnCancelar);
 	}
 }

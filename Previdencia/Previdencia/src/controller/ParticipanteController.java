@@ -27,6 +27,13 @@ public class ParticipanteController {
 		this.participantes.remove(part);
 		
 	}
+	public void editParticipante(Participante part, String text) {
+		participantes.remove(part);
+		part.setNomeParticipante(text);
+		participantes.add(part);
+		
+		
+	}
 
 	
 

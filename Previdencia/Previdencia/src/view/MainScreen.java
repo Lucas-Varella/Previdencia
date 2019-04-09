@@ -49,7 +49,7 @@ public class MainScreen extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblPrevidnciaTela = new JLabel("Previd\u00EAncia - Tela Principal");
+		JLabel lblPrevidnciaTela = new JLabel("Previdencia - Tela Principal");
 		lblPrevidnciaTela.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblPrevidnciaTela.setBounds(109, 11, 226, 48);
 		contentPane.add(lblPrevidnciaTela);
