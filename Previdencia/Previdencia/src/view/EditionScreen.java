@@ -86,10 +86,17 @@ public class EditionScreen extends JFrame {
 		JButton btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JdbcController.getInstance().editParticipante(part, tfName.getText(), (String)comboBox.getSelectedItem());
-				JOptionPane.showMessageDialog(null, "Editado Participante  de ID "+ part.getIdParticipante() +", com o nome: " + tfName.getText()+" e Situacao "+(String)comboBox.getSelectedItem());
-				setVisible(false);
-				ScreenController.getInstance().showParticipanteScreen();
+				if(!tfName.getText().equals("")) {
+					JdbcController.getInstance().editParticipante(part, tfName.getText(), (String)comboBox.getSelectedItem());
+					JOptionPane.showMessageDialog(null, "Editado Participante  de ID "+ part.getIdParticipante() +", com o nome: " + tfName.getText()+" e Situacao "+(String)comboBox.getSelectedItem());
+					setVisible(false);
+					ScreenController.getInstance().populateParticipantes();
+					ScreenController.getInstance().showParticipanteScreen();
+				}else {
+					JOptionPane.showMessageDialog(null, "Favor preencher campo Nome.");
+
+				}
+				
 			}
 		});
 		btnConfirmar.setBounds(110, 147, 89, 23);

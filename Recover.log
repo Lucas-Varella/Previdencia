@@ -1,0 +1,4 @@
+﻿Timestamp	Filename	Error	Message
+2019-04-09 16:27:30.707 -0300	Previdencia.fmp12	0	*** Started consistency check of improperly closed file, total of 59 block(s) to check
+2019-04-09 16:27:30.712 -0300	Previdencia.fmp12	0	Reset maximum block sequence number to 7080
+2019-04-09 16:27:30.716 -0300	Previdencia.fmp12	0	*** Completed consistency check, checked 59 block(s)

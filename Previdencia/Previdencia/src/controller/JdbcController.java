@@ -76,12 +76,13 @@ public class JdbcController {
 	}
 	public long insertParticipante(String nomeParticipante, String situacaoParticipante) {
 		try {
+			
 			Statement st = con.createStatement();
 			st.execute("INSERT INTO CONTA (saldoPortabilidade, saldoContribuicoesAdicionais, saldoContribuicoesNormais) VALUES (0, 0, 0)");
-			ResultSet rs = st.executeQuery("SELECT idConta FROM CONTA ORDER BY dataCadastro DESC");
+			ResultSet rs = st.executeQuery("SELECT MAX(idConta) FROM CONTA");
 			int idConta = 0;
 			if(rs.next()) {
-				idConta = rs.getInt("idConta");
+				idConta = rs.getInt(1);
 			}
 			
 			st.execute("INSERT INTO PARTICIPANTE (nomeParticipante, idConta, situacaoParticipante) VALUES ('"+nomeParticipante+"',"+idConta+", '"+situacaoParticipante+"')");
@@ -144,7 +145,7 @@ public class JdbcController {
 		try {
 			Statement st = con.createStatement();
 			st.execute("UPDATE PARTICIPANTE SET nomeParticipante ='"+nomeParticipante+"', situacaoParticipante = '"+situacaoParticipante+"' WHERE idParticipante ="+part.getIdParticipante());
-			ParticipanteController.getInstance().editParticipante(part,nomeParticipante,situacaoParticipante);
+			loadParticipantes();
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -269,6 +270,25 @@ public class JdbcController {
 		return false;
 		
 		
+	}
+
+	public Participante findParticipanteById(int idParticipante) {
+		Participante part = null;
+		try {
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM Participante WHERE idParticipante ="+idParticipante);
+			if(rs.next()) {
+				int idConta = rs.getInt("idConta");
+				Date dataCriacao = rs.getDate("dataCriacao");
+				String nomeParticipante = rs.getString("nomeParticipante");
+				String situacaoParticipante = rs.getString("situacaoParticipante");
+				part = new Participante(idParticipante, dataCriacao, nomeParticipante, idConta, situacaoParticipante);
+				return part;
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return part;
 	}
 	
 	

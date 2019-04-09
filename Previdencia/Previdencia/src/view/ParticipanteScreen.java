@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 import controller.JdbcController;
@@ -19,15 +20,20 @@ import javax.swing.ListSelectionModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Font;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.SwingConstants;
 
 public class ParticipanteScreen extends JFrame {
 
 	private JPanel contentPane;
-	JList participantes; 
+	private JTable tbParticipantes;
+	private DefaultTableModel tableModel;
 
 	/**
 	 * Launch the application.
@@ -66,11 +72,7 @@ public class ParticipanteScreen extends JFrame {
 		lblParticipantes.setBounds(192, 11, 171, 14);
 		contentPane.add(lblParticipantes);
 		
-		participantes = new JList<Participante>();
-		participantes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		participantes.setBounds(21, 36, 313, 220);
-		populateParticipantes();
-		contentPane.add(participantes);
+		
 		
 		JButton btnCadastrarParticipante = new JButton("Cadastrar Participante");
 		btnCadastrarParticipante.setToolTipText("Cadastro de novo participante");
@@ -91,9 +93,12 @@ public class ParticipanteScreen extends JFrame {
 		btnEditarParticipante.setForeground(Color.WHITE);
 		btnEditarParticipante.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(participantes.getSelectedValue() != null) {
+				
+				if(tbParticipantes.getSelectedRow() != -1) {
+					int row = tbParticipantes.getSelectedRow();
+					Participante part = JdbcController.getInstance().findParticipanteById(Integer.parseInt((String)tbParticipantes.getValueAt(row, 0)));
 					setVisible(false);
-					ScreenController.getInstance().showEditionScreen((Participante)participantes.getSelectedValue());
+					ScreenController.getInstance().showEditionScreen(part);
 				}else {
 					JOptionPane.showMessageDialog(null, "Favor selecionar Participante para edicao.");
 				}
@@ -106,9 +111,10 @@ public class ParticipanteScreen extends JFrame {
 		JButton btnRemoverParticipante = new JButton("Remover Participante");
 		btnRemoverParticipante.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(participantes.getSelectedValue() != null) {
+				if(tbParticipantes.getSelectedRow() != -1) {
 					if(0 == JOptionPane.showConfirmDialog(null, "Participante e Conta atribuida serao excluidos. Tem Certeza?", "Confirmar", JOptionPane.YES_NO_OPTION)) {
-						JdbcController.getInstance().removeParticipante((Participante)participantes.getSelectedValue());
+						int row = tbParticipantes.getSelectedRow();
+						JdbcController.getInstance().removeParticipante(JdbcController.getInstance().findParticipanteById(Integer.parseInt((String)tbParticipantes.getValueAt(row, 0))));
 						populateParticipantes();
 					}
 				} else {
@@ -126,10 +132,10 @@ public class ParticipanteScreen extends JFrame {
 		JButton btnAcessarConta = new JButton("Acessar Conta");
 		btnAcessarConta.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(participantes.getSelectedValue() != null) {
+				int row = tbParticipantes.getSelectedRow();
+				if(row != -1) {
 					setVisible(false);
-					Participante part = (Participante)participantes.getSelectedValue();
-					ScreenController.getInstance().showContaScreen(JdbcController.getInstance().findContaById(part.getIdConta()));
+					ScreenController.getInstance().showContaScreen(JdbcController.getInstance().findContaById(Integer.parseInt((String)tbParticipantes.getValueAt(row,2))));
 				} else {
 					JOptionPane.showMessageDialog(null, "Favor selecionar Participante para acesso a conta.");
 
@@ -155,21 +161,46 @@ public class ParticipanteScreen extends JFrame {
 		});
 		btnVoltar.setBounds(629, 358, 85, 23);
 		contentPane.add(btnVoltar);
-		populateParticipantes();
-	}
-	public void populateParticipantes() {
-		contentPane.remove(participantes);
-		DefaultListModel<Participante> dlm = new DefaultListModel<Participante>();
-		ArrayList<Participante> parts = ParticipanteController.getInstance().getParticipantes();
-		for(Participante p : parts ){
-		 dlm.addElement(p);
-		}   
-		participantes = new JList<Participante>(dlm);
-		participantes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		participantes.setBounds(21, 36, 513, 345);
-		contentPane.add(participantes);
-		this.repaint();
-
 		
+		tbParticipantes = new JTable();
+		
+	    ArrayList<Participante> parts = ParticipanteController.getInstance().getParticipantes();
+	    String[][] data = new String[parts.size()][5];
+	    for (Participante p : parts) {
+    		int x = parts.indexOf(p);
+            data[x][0] = ""+p.getIdParticipante();
+            data[x][1] = ""+p.getNomeParticipante();
+            data[x][2] = ""+p.getIdConta();
+            data[x][3] = ""+p.getSituacaoParticipante();
+            data[x][4] = ""+p.getDataCriacao();           
+	    }
+	    String[] cols = {"ID", "Nome", "ID Conta", "Situacao", "Data Criacao"};
+	    tableModel = new DefaultTableModel(data, cols);
+	    tbParticipantes.setModel(tableModel);
+		tbParticipantes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tbParticipantes.setForeground(Color.WHITE);
+		tbParticipantes.setBackground(Color.DARK_GRAY);
+		tbParticipantes.setBounds(30, 52, 504, 324);
+		JScrollPane pane = new JScrollPane(tbParticipantes);
+		pane.setBounds(25, 30, 509, 346);
+		contentPane.add(pane, BorderLayout.SOUTH);
+	}
+	
+	public void populateParticipantes() {
+		ArrayList<Participante> parts = ParticipanteController.getInstance().getParticipantes();
+	    String[][] data = new String[parts.size()][5];
+	    for (Participante p : parts) {
+    		int x = parts.indexOf(p);
+            data[x][0] = ""+p.getIdParticipante();
+            data[x][1] = ""+p.getNomeParticipante();
+            data[x][2] = ""+p.getIdConta();
+            data[x][3] = ""+p.getSituacaoParticipante();
+            data[x][4] = ""+p.getDataCriacao();           
+	    }
+	    String[] cols = {"ID", "Nome", "ID Conta", "Situacao", "Data Criacao"};
+	    tableModel = new DefaultTableModel(data, cols);
+	    tbParticipantes.setModel(tableModel);
+	    tableModel.fireTableDataChanged();
+	    this.repaint();
 	}
 }

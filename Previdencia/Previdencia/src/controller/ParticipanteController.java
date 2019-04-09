@@ -18,6 +18,7 @@ public class ParticipanteController {
 		this.participantes.add(participante);
 	}
 	public ArrayList<Participante> getParticipantes() {
+		this.participantes = JdbcController.getInstance().loadParticipantes();
 		return this.participantes;
 	}
 	public static ParticipanteController getInstance() {
@@ -27,14 +28,7 @@ public class ParticipanteController {
 		this.participantes.remove(part);
 		
 	}
-	public void editParticipante(Participante part, String nomeParticipante, String situacaoParticipante) {
-		participantes.remove(part);
-		part.setNomeParticipante(nomeParticipante);
-		part.setSituacaoParticipante(situacaoParticipante);
-		participantes.add(part);
-		
-		
-	}
+	
 
 	
 

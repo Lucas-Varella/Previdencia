@@ -77,12 +77,18 @@ public class CadastroScreen extends JFrame {
 		JButton btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				long idConta = ScreenController.getInstance().insertParticipante(tfNome.getText(), (String)cbTipo.getSelectedItem());
-				JOptionPane.showMessageDialog(null, "Criado Participante '"+ tfNome.getText() +"', atribuida conta numero "+idConta+".");
-				tfNome.setText("");
-				setVisible(false);
-				ScreenController.getInstance().populateParticipantes();
-				ScreenController.getInstance().showParticipanteScreen();
+				if(!tfNome.getText().equals("")) {
+					long idConta = ScreenController.getInstance().insertParticipante(tfNome.getText(), (String)cbTipo.getSelectedItem());
+					JOptionPane.showMessageDialog(null, "Criado Participante '"+ tfNome.getText() +"', atribuida conta numero "+idConta+".");
+					tfNome.setText("");
+					setVisible(false);
+					ScreenController.getInstance().populateParticipantes();
+					ScreenController.getInstance().showParticipanteScreen();
+				}else {
+					JOptionPane.showMessageDialog(null, "Favor preencher campo Nome.");
+
+				}
+				
 			}
 		});
 		btnConfirmar.setForeground(Color.WHITE);

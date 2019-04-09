@@ -46,7 +46,7 @@ public class Participante {
 	}
 	@Override
 	public String toString() {
-		return "ID: "+this.idParticipante+" Nome Participante: "+this.nomeParticipante+" Data de Criacao: "+this.dataCriacao+" ID Conta: "+this.idConta+" Situacao: "+this.situacaoParticipante;
+		return ""+idParticipante;
 	}
 
 }
