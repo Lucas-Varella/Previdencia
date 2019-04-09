@@ -4,13 +4,15 @@ import java.sql.Date;
 
 public class Contribuicao {
 	
-	private long idContribuicao;
+	private int idContribuicao;
 	private Date dataContribuicao;
-	private long idConta;
+	private int idConta;
 	private double valorContribuicao;
 	private String tipoContribuicao;
 	
-	public Contribuicao(long idConta, double valorContribuicao, String tipoContribuicao) {
+	public Contribuicao(int idContribuicao, Date dataContribuicao, int idConta, double valorContribuicao, String tipoContribuicao) {
+		this.idContribuicao = idContribuicao;
+		this.dataContribuicao = dataContribuicao;
 		this.idConta = idConta;
 		this.valorContribuicao = valorContribuicao;
 		this.tipoContribuicao = tipoContribuicao;

@@ -7,11 +7,18 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controller.JdbcController;
+import controller.ScreenController;
 import model.Conta;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ContribuicaoScreen extends JFrame {
 
@@ -57,7 +64,8 @@ public class ContribuicaoScreen extends JFrame {
 		contentPane.add(lblSaldoAtual);
 		
 		JComboBox cbTipo = new JComboBox();
-		cbTipo.setBounds(171, 70, 148, 20);
+		cbTipo.setModel(new DefaultComboBoxModel(new String[] {"PORTABILIDADE", "ADICIONAL", "NORMAL"}));
+		cbTipo.setBounds(154, 70, 165, 20);
 		contentPane.add(cbTipo);
 		
 		JLabel lblTipoDeContribuio = new JLabel("Tipo de Contribui\u00E7\u00E3o: ");
@@ -69,8 +77,37 @@ public class ContribuicaoScreen extends JFrame {
 		contentPane.add(lblValorContribuir);
 		
 		tfValor = new JTextField();
-		tfValor.setBounds(171, 91, 148, 20);
+		tfValor.setBounds(154, 91, 165, 20);
 		contentPane.add(tfValor);
 		tfValor.setColumns(10);
+		
+		JButton btnConfirmar = new JButton("Confirmar");
+		btnConfirmar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+				    Double.parseDouble(tfValor.getText());
+				    JdbcController.getInstance().contribuir(conta, (String)cbTipo.getSelectedItem(), Double.parseDouble(tfValor.getText()));
+				    JOptionPane.showMessageDialog(null, "Contribuido valor de R$"+Double.parseDouble(tfValor.getText())+"0 Para o saldo de "+(String)cbTipo.getSelectedItem()+".");
+				    setVisible(false);
+				    ScreenController.getInstance().showContaScreen(JdbcController.getInstance().findContaById(conta.getIdConta()));
+				} catch (NumberFormatException e1) {
+				    JOptionPane.showMessageDialog(null, "Favor informar somente numeros em valor, no formato '00.00'.");
+				}
+			}
+		});
+		btnConfirmar.setBounds(131, 127, 89, 23);
+		contentPane.add(btnConfirmar);
+		
+		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(0 == JOptionPane.showConfirmDialog(null, "Perdera os dados preenchidos. Tem Certeza?", "Confirmar", JOptionPane.YES_NO_OPTION)) {
+					setVisible(false);
+					ScreenController.getInstance().showContaScreen(conta);
+				}				
+			}
+		});
+		btnCancelar.setBounds(230, 127, 89, 23);
+		contentPane.add(btnCancelar);
 	}
 }

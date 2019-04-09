@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import model.Conta;
+import model.Contribuicao;
 import model.Participante;
 
 public class JdbcController {
@@ -187,6 +188,54 @@ public class JdbcController {
 		}
 		return part;
 	}
+
+	public int contribuir(Conta conta, String tipoContribuicao, Double valor) {
+		try {
+			Statement st = con.createStatement();
+			switch(tipoContribuicao) {
+			case "PORTABILIDADE" :
+				st.execute("UPDATE CONTA SET saldoPortabilidade ="+(conta.getSaldoPortabilidade()+valor)+" WHERE idConta = "+conta.getIdConta());		
+				return 0;
+			case "ADICIONAL" :
+				st.execute("UPDATE CONTA SET saldoContribuicoesAdicionais ="+(conta.getSaldoContribuicoesAdicionais()+valor)+" WHERE idConta = "+conta.getIdConta());		
+				return 0;
+			case "NORMAL" :
+				st.execute("UPDATE CONTA SET saldoContribuicoesNormais ="+(conta.getSaldoContribuicoesNormais()+valor)+" WHERE idConta = "+conta.getIdConta());		
+				return 0;
+			}
+			
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+		
+	}
+//
+//	public ArrayList<Contribuicao> loadContribuicoes(int idConta) {
+//		ArrayList<Contribuicao> contrs = new ArrayList<>();
+//		int idContribuicao;
+//		Date dataContribuicao;
+//		double valorContribuicao;
+//		String tipoContribuicao;
+//		try {
+//			Statement st = con.createStatement();
+//			ResultSet rs = st.executeQuery("SELECT * FROM Contribuicao WHERE idConta ="+idConta);
+//			while(rs.next()) {
+//				idContribuicao = rs.getInt("idContribuicao");
+//				dataContribuicao = rs.getDate("dataContribuicao");
+//				tipoContribuicao = rs.getString("tipoContribuicao");
+//				valorContribuicao = rs.getDouble("valorContribuicao");
+//				Contribuicao contr = new Contribuicao(idContribuicao, dataContribuicao, idConta, valorContribuicao, tipoContribuicao);
+//				contrs.add(contr);
+//			}
+//			return contrs;
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return contrs;
+//	}
 	
 	
 	
