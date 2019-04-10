@@ -66,7 +66,7 @@ public class ResgateScreen extends JFrame {
 		lblResgateDaConta.setBounds(145, 11, 149, 22);
 		contentPane.add(lblResgateDaConta);
 		
-		JLabel lblSaldoAtual = new JLabel("Saldo Atual: Favor Selecionar tipo de Saldo");
+		JLabel lblSaldoAtual = new JLabel("Saldo Atual(Portabilidade): R$"+conta.getSaldoPortabilidade());
 		lblSaldoAtual.setBounds(62, 44, 291, 14);
 		contentPane.add(lblSaldoAtual);
 		
@@ -121,24 +121,24 @@ public class ResgateScreen extends JFrame {
 					rdbtnTotal.setEnabled(true);
 					tfValor.setText("");
 					tfValor.setEditable(true);
-					lblSaldoAtual.setText("Saldo Atual(Portabilidade): R$"+conta.getSaldoPortabilidade()+"0");
+					lblSaldoAtual.setText("Saldo Atual(Portabilidade): R$"+conta.getSaldoPortabilidade());
 					break;
 				case "ADICIONAL" :
 					rdbtnResgateParcial.setEnabled(true);
 					rdbtnTotal.setEnabled(true);
 					tfValor.setText("");
 					tfValor.setEditable(true);
-					lblSaldoAtual.setText("Saldo Atual(Adicional): R$"+conta.getSaldoContribuicoesAdicionais()+"0");
+					lblSaldoAtual.setText("Saldo Atual(Adicional): R$"+conta.getSaldoContribuicoesAdicionais());
 					break;
 				case "NORMAL" :
 					rdbtnResgateParcial.setEnabled(true);
 					rdbtnTotal.setEnabled(true);
 					tfValor.setText("");
 					tfValor.setEditable(true);
-					lblSaldoAtual.setText("Saldo Atual(Normal): R$"+conta.getSaldoContribuicoesNormais()+"0");
+					lblSaldoAtual.setText("Saldo Atual(Normal): R$"+conta.getSaldoContribuicoesNormais());
 					break;
 				case "TOTAL" :
-					lblSaldoAtual.setText("Saldo Atual(Total): R$"+(conta.getSaldoContribuicoesNormais()+conta.getSaldoContribuicoesAdicionais()+conta.getSaldoPortabilidade())+"0");
+					lblSaldoAtual.setText("Saldo Atual(Total): R$"+(conta.getSaldoContribuicoesNormais()+conta.getSaldoContribuicoesAdicionais()+conta.getSaldoPortabilidade()));
 					tfValor.setText(""+(conta.getSaldoContribuicoesNormais()+conta.getSaldoContribuicoesAdicionais()+conta.getSaldoPortabilidade()));
 					tfValor.setEditable(false);
 					rdbtnResgateParcial.setEnabled(false);
@@ -199,9 +199,12 @@ public class ResgateScreen extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					Double.parseDouble(tfValor.getText());
+					
 					try {
-						if(parcelas && (Integer.parseInt(tfParcelas.getText()) <= 60) ) {
-							JOptionPane.showMessageDialog(null, "Maximo de 60 parcelas!");
+						if(Double.parseDouble(tfValor.getText()) <= 0) {
+							JOptionPane.showMessageDialog(null, "Favor inserir somente numeros maiores que zero em valor");
+						}else if(parcelas && !(Integer.parseInt(tfParcelas.getText()) <= 60) || !(Integer.parseInt(tfParcelas.getText()) > 0) ) {
+							JOptionPane.showMessageDialog(null, "Maximo de 60 parcelas, minimo de 1");
 						//validacao de resgate: Resgate normal efetuado em menos de 2 anos
 						}else if(((String)cbTipo.getSelectedItem()).equals("NORMAL") && !JdbcController.getInstance().validateResgateNormal(conta.getIdConta())) {
 							JOptionPane.showMessageDialog(null, "Resgates de contribuicoes normais so podem ocorrer a cada 2 anos!");
@@ -219,18 +222,20 @@ public class ResgateScreen extends JFrame {
 									if(!JdbcController.getInstance().resgatar(conta, (String)cbTipo.getSelectedItem(), Double.parseDouble(tfValor.getText()), Integer.parseInt(tfParcelas.getText()))) {
 									    JOptionPane.showMessageDialog(null, "Nao ha saldo suficiente para resgate", "Atencao", JOptionPane.WARNING_MESSAGE, null);
 									}else {
-									    JOptionPane.showMessageDialog(null, "Resgatado valor de R$"+Double.parseDouble(tfValor.getText())+"0 Do saldo de "+(String)cbTipo.getSelectedItem()+".");
+										//realiza operacoes de cancelamento do resgate total.
+										JdbcController.getInstance().resgateTotal(conta);
+									    JOptionPane.showMessageDialog(null, "Resgatado valor de R$"+Double.parseDouble(tfValor.getText())+" Do saldo de "+(String)cbTipo.getSelectedItem()+".");
 									    setVisible(false);
 									    ScreenController.getInstance().showContaScreen(conta);
 									}
 								}
 								
 							} else {
-								//resgate normal, somente valida saldo positivo
+								//resgate parcial, somente valida saldo positivo
+								
 								if(!JdbcController.getInstance().resgatar(conta, (String)cbTipo.getSelectedItem(), Double.parseDouble(tfValor.getText()), Integer.parseInt(tfParcelas.getText()))) {
 								    JOptionPane.showMessageDialog(null, "Nao ha saldo suficiente para resgate", "Atencao", JOptionPane.WARNING_MESSAGE, null);
 								}else {
-									System.out.println((String)cbTipo.getSelectedItem()+ " test equals normal:  "+((String)cbTipo.getSelectedItem()).equals("NORMAL")+" multiplication: "+(0.2*conta.getSaldoContribuicoesNormais()+" value: "+Double.parseDouble(tfValor.getText())+" test if value < acc "+(Double.parseDouble(tfValor.getText()) <= (0.2*conta.getSaldoContribuicoesNormais()) ) ));
 								    JOptionPane.showMessageDialog(null, "Resgatado valor de R$"+Double.parseDouble(tfValor.getText())+"0 Do saldo de "+(String)cbTipo.getSelectedItem()+".");
 								    setVisible(false);
 								    ScreenController.getInstance().showContaScreen(JdbcController.getInstance().findContaById(conta.getIdConta()));

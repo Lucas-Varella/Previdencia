@@ -59,7 +59,7 @@ public class ContribuicaoScreen extends JFrame {
 		lblContribuioConta.setBounds(119, 11, 217, 23);
 		contentPane.add(lblContribuioConta);
 		
-		JLabel lblSaldoAtual = new JLabel("Saldo Atual: Favor Selecionar tipo de Contribuição");
+		JLabel lblSaldoAtual = new JLabel("Saldo Atual(Portabilidade): R$"+conta.getSaldoPortabilidade());
 		lblSaldoAtual.setBounds(24, 45, 314, 14);
 		contentPane.add(lblSaldoAtual);
 		
@@ -68,13 +68,13 @@ public class ContribuicaoScreen extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				switch((String)cbTipo.getSelectedItem()) {
 				case "PORTABILIDADE" :
-					lblSaldoAtual.setText("Saldo Atual(Portabilidade): R$"+conta.getSaldoPortabilidade()+"0");
+					lblSaldoAtual.setText("Saldo Atual(Portabilidade): R$"+conta.getSaldoPortabilidade());
 					break;
 				case "ADICIONAL" :
-					lblSaldoAtual.setText("Saldo Atual(Adicional): R$"+conta.getSaldoContribuicoesAdicionais()+"0");
+					lblSaldoAtual.setText("Saldo Atual(Adicional): R$"+conta.getSaldoContribuicoesAdicionais());
 					break;
 				case "NORMAL" :
-					lblSaldoAtual.setText("Saldo Atual(Normal): R$"+conta.getSaldoContribuicoesNormais()+"0");
+					lblSaldoAtual.setText("Saldo Atual(Normal): R$"+conta.getSaldoContribuicoesNormais());
 					break;
 				}
 			}
@@ -102,16 +102,26 @@ public class ContribuicaoScreen extends JFrame {
 		btnConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-				    JdbcController.getInstance().contribuir(conta, (String)cbTipo.getSelectedItem(), Double.parseDouble(tfValor.getText()));
-				    JOptionPane.showMessageDialog(null, "Contribuido valor de R$"+Double.parseDouble(tfValor.getText())+"0 Para o saldo de "+(String)cbTipo.getSelectedItem()+".");
-				    setVisible(false);
-				    ScreenController.getInstance().showContaScreen(JdbcController.getInstance().findContaById(conta.getIdConta()));
+					double valor = Double.parseDouble(tfValor.getText());
+					valor = valor * 100;
+					valor = (Math.round(valor));
+					valor = valor / 100;
+					tfValor.setText(""+valor);
+					if(Double.parseDouble(tfValor.getText()) <= 0) {
+						JOptionPane.showMessageDialog(null, "Favor inserir somente numeros positivos em valor");
+					}else {
+					    JdbcController.getInstance().contribuir(conta, (String)cbTipo.getSelectedItem(), Double.parseDouble(tfValor.getText()));
+					    JOptionPane.showMessageDialog(null, "Contribuido valor de R$"+Double.parseDouble(tfValor.getText())+" Para o saldo de "+(String)cbTipo.getSelectedItem()+".");
+					    setVisible(false);
+					    ScreenController.getInstance().showContaScreen(JdbcController.getInstance().findContaById(conta.getIdConta()));
+
+					}
 				} catch (NumberFormatException e1) {
 				    JOptionPane.showMessageDialog(null, "Favor informar somente numeros em valor, no formato '00.00'.");
 				}
 			}
 		});
-		btnConfirmar.setBounds(131, 127, 89, 23);
+		btnConfirmar.setBounds(85, 127, 101, 23);
 		contentPane.add(btnConfirmar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
@@ -125,7 +135,7 @@ public class ContribuicaoScreen extends JFrame {
 				}				
 			}
 		});
-		btnCancelar.setBounds(230, 127, 89, 23);
+		btnCancelar.setBounds(218, 127, 101, 23);
 		contentPane.add(btnCancelar);
 	}
 }

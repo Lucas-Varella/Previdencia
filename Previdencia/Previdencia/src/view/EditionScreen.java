@@ -79,11 +79,13 @@ public class EditionScreen extends JFrame {
 		tfName.setColumns(10);
 		
 		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"ATIVO", "CANCELADO", "BENEFICIO", "VINCULADO", "SUSPENSO"}));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"ATIVO", "BENEFICIO", "VINCULADO", "SUSPENSO"}));
 		comboBox.setBounds(152, 115, 186, 20);
 		contentPane.add(comboBox);
 		
 		JButton btnConfirmar = new JButton("Confirmar");
+		btnConfirmar.setForeground(Color.WHITE);
+		btnConfirmar.setBackground(Color.DARK_GRAY);
 		btnConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(!tfName.getText().equals("")) {
@@ -99,10 +101,12 @@ public class EditionScreen extends JFrame {
 				
 			}
 		});
-		btnConfirmar.setBounds(110, 147, 89, 23);
+		btnConfirmar.setBounds(110, 147, 106, 23);
 		contentPane.add(btnConfirmar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.setForeground(Color.WHITE);
+		btnCancelar.setBackground(Color.DARK_GRAY);
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(0 == JOptionPane.showConfirmDialog(null, "Perdera os dados preenchidos. Tem Certeza?", "Confirmar", JOptionPane.YES_NO_OPTION)) {
@@ -112,7 +116,7 @@ public class EditionScreen extends JFrame {
 				}
 			}
 		});
-		btnCancelar.setBounds(249, 147, 89, 23);
+		btnCancelar.setBounds(232, 147, 106, 23);
 		contentPane.add(btnCancelar);
 		
 		JLabel lblSituaoNova = new JLabel("Situa\u00E7\u00E3o :");

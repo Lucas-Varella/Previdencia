@@ -70,7 +70,7 @@ public class CadastroScreen extends JFrame {
 		contentPane.add(lblNome);
 		
 		JComboBox<String> cbTipo = new JComboBox();
-		cbTipo.setModel(new DefaultComboBoxModel(new String[] {"ATIVO", "CANCELADO", "BENEFICIO", "VINCULADO", "SUSPENSO"}));
+		cbTipo.setModel(new DefaultComboBoxModel(new String[] {"ATIVO", "BENEFICIO", "VINCULADO"}));
 		cbTipo.setBounds(160, 87, 200, 20);
 		contentPane.add(cbTipo);
 		

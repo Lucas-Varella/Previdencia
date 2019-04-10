@@ -195,6 +195,9 @@ public class JdbcController {
 	//Atualiza valor de saldo de acordo com contribui��o
 	public int contribuir(Conta conta, String tipoContribuicao, Double valor) {
 		try {
+			valor = valor * 100;
+			valor = (double) (Math.round(valor));
+			valor = valor / 100;
 			Statement st = con.createStatement();
 			switch(tipoContribuicao) {
 			case "PORTABILIDADE" :
@@ -218,12 +221,17 @@ public class JdbcController {
 	
 	public boolean resgatar(Conta conta, String tipoResgate, double valor, int numeroParcelas) {
 		Participante part = findParticipanteByContaId(conta.getIdConta());
+		
 		try {
 			Statement st = con.createStatement();
 				switch(tipoResgate) {
 				case "PORTABILIDADE" :
 					if(conta.getSaldoPortabilidade() < valor) {
 						return false;
+					}else if (conta.getSaldoPortabilidade() != valor) {
+						valor = valor * 100;
+						valor = Math.round(valor);
+						valor = valor / 100;
 					}
 					st.execute("UPDATE CONTA SET saldoPortabilidade ="+(conta.getSaldoPortabilidade()-valor)+" WHERE idConta = "+conta.getIdConta());	
 					st.execute("INSERT INTO RESGATE (idConta, valorResgate, tipoResgate, numeroParcelas) VALUES("+conta.getIdConta()+","+valor+",'"+tipoResgate+"',"+numeroParcelas+")");
@@ -231,6 +239,10 @@ public class JdbcController {
 				case "ADICIONAL" :
 					if(conta.getSaldoContribuicoesAdicionais() < valor) {
 						return false;
+					}else if (conta.getSaldoContribuicoesAdicionais() != valor) {
+						valor = valor * 100;
+						valor = Math.round(valor);
+						valor = valor / 100;
 					}
 					st.execute("UPDATE CONTA SET saldoContribuicoesAdicionais ="+(conta.getSaldoContribuicoesAdicionais()-valor)+" WHERE idConta = "+conta.getIdConta());		
 					st.execute("INSERT INTO RESGATE (idConta, valorResgate, tipoResgate, numeroParcelas) VALUES("+conta.getIdConta()+","+valor+",'"+tipoResgate+"',"+numeroParcelas+")");
@@ -238,12 +250,20 @@ public class JdbcController {
 				case "NORMAL" :
 					if(conta.getSaldoContribuicoesNormais() < valor) {
 						return false;
+					}else if (conta.getSaldoContribuicoesNormais() != valor) {
+						valor = valor * 100;
+						valor = Math.round(valor);
+						valor = valor / 100;
 					}
 					st.execute("UPDATE CONTA SET saldoContribuicoesNormais ="+(conta.getSaldoContribuicoesNormais()-valor)+" WHERE idConta = "+conta.getIdConta());		
 					st.execute("INSERT INTO RESGATE (idConta, valorResgate, tipoResgate, numeroParcelas) VALUES("+conta.getIdConta()+","+valor+",'"+tipoResgate+"',"+numeroParcelas+")");
 					return true;
 				case "TOTAL" :
-					
+					st.execute("UPDATE CONTA SET saldoPortabilidade = 0 WHERE idConta = "+conta.getIdConta());
+					st.execute("UPDATE CONTA SET saldoContribuicoesAdicionais = 0 WHERE idConta = "+conta.getIdConta());
+					st.execute("UPDATE CONTA SET saldoContribuicoesNormais = 0 WHERE idConta = "+conta.getIdConta());
+					return true;
+
 				}
 			
 			
@@ -311,6 +331,17 @@ public class JdbcController {
 			e.printStackTrace();
 		}
 		return true;
+	}
+
+	public void resgateTotal(Conta conta) {
+		try {
+			Statement st = con.createStatement();
+			st.execute("UPDATE PARTICIPANTE SET situacaoParticipante ='CANCELADO' WHERE idConta ="+conta.getIdConta());
+		
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	

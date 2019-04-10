@@ -97,8 +97,14 @@ public class ParticipanteScreen extends JFrame {
 				if(tbParticipantes.getSelectedRow() != -1) {
 					int row = tbParticipantes.getSelectedRow();
 					Participante part = JdbcController.getInstance().findParticipanteById(Integer.parseInt((String)tbParticipantes.getValueAt(row, 0)));
-					setVisible(false);
-					ScreenController.getInstance().showEditionScreen(part);
+					if(!part.getSituacaoParticipante().equals("CANCELADO")) {
+						setVisible(false);
+						ScreenController.getInstance().showEditionScreen(part);
+
+					}else {
+						JOptionPane.showMessageDialog(null, "Nao e possivel editar participante cancelado.");
+
+					}
 				}else {
 					JOptionPane.showMessageDialog(null, "Favor selecionar Participante para edicao.");
 				}
