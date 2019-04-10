@@ -130,15 +130,19 @@ public class ResgateScreen extends JFrame {
 				try {
 					Double.parseDouble(tfValor.getText());
 					try {
-						if(!((String)cbTipo.getSelectedItem().equals("NORMAL" && !JdbcController.getInstance().validateResgateNormal(conta.getIdConta())))) {
+						//validacao de resgate: Resgate normal efetuado em menos de 2 anos
+						if(((String)cbTipo.getSelectedItem()).equals("NORMAL") && !JdbcController.getInstance().validateResgateNormal(conta.getIdConta())) {
+							JOptionPane.showMessageDialog(null, "Resgates de contribuicoes normais so podem ocorrer a cada 2 anos!");
+						}else if(!JdbcController.getInstance().validateIdadeConta(conta.getIdConta())) { //valida contas cadastradas ha mais de 3 anos.
+							JOptionPane.showMessageDialog(null, "Deve haver periodo de carencia de 3 anos de criacao de conta ate poder resgatar!");
+						}else {
 							if(!JdbcController.getInstance().resgatar(conta, (String)cbTipo.getSelectedItem(), Double.parseDouble(tfValor.getText()), Integer.parseInt(tfParcelas.getText()))) {
-							    JOptionPane.showMessageDialog(null, "Não há saldo suficiente para resgate!", "Atenção", JOptionPane.WARNING_MESSAGE, null);
+							    JOptionPane.showMessageDialog(null, "Nao ha saldo suficiente para resgate", "Atencao", JOptionPane.WARNING_MESSAGE, null);
 							}else {
 							    JOptionPane.showMessageDialog(null, "Resgatado valor de R$"+Double.parseDouble(tfValor.getText())+"0 Do saldo de "+(String)cbTipo.getSelectedItem()+".");
 							    setVisible(false);
 							    ScreenController.getInstance().showContaScreen(JdbcController.getInstance().findContaById(conta.getIdConta()));
 							}
-						}else {
 							
 						}
 						

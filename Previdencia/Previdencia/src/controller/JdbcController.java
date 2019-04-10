@@ -192,7 +192,7 @@ public class JdbcController {
 		}
 		return part;
 	}
-	//Atualiza valor de saldo de acordo com contribuição
+	//Atualiza valor de saldo de acordo com contribuiï¿½ï¿½o
 	public int contribuir(Conta conta, String tipoContribuicao, Double valor) {
 		try {
 			Statement st = con.createStatement();
@@ -226,21 +226,21 @@ public class JdbcController {
 						return false;
 					}
 					st.execute("UPDATE CONTA SET saldoPortabilidade ="+(conta.getSaldoPortabilidade()-valor)+" WHERE idConta = "+conta.getIdConta());	
-					st.execute("INSERT INTO RESGATE (idConta, valorResgate, tipoResgate, numeroParcelas) VALUES("+conta.getIdConta()+","+valor+","+tipoResgate+","+numeroParcelas+")");
+					st.execute("INSERT INTO RESGATE (idConta, valorResgate, tipoResgate, numeroParcelas) VALUES("+conta.getIdConta()+","+valor+",'"+tipoResgate+"',"+numeroParcelas+")");
 					return true;
 				case "ADICIONAL" :
 					if(conta.getSaldoContribuicoesAdicionais() < valor) {
 						return false;
 					}
 					st.execute("UPDATE CONTA SET saldoContribuicoesAdicionais ="+(conta.getSaldoContribuicoesAdicionais()-valor)+" WHERE idConta = "+conta.getIdConta());		
-					st.execute("INSERT INTO RESGATE (idConta, valorResgate, tipoResgate, numeroParcelas) VALUES("+conta.getIdConta()+","+valor+","+tipoResgate+","+numeroParcelas+")");
+					st.execute("INSERT INTO RESGATE (idConta, valorResgate, tipoResgate, numeroParcelas) VALUES("+conta.getIdConta()+","+valor+",'"+tipoResgate+"',"+numeroParcelas+")");
 					return true;
 				case "NORMAL" :
 					if(conta.getSaldoContribuicoesNormais() < valor) {
 						return false;
 					}
 					st.execute("UPDATE CONTA SET saldoContribuicoesNormais ="+(conta.getSaldoContribuicoesNormais()-valor)+" WHERE idConta = "+conta.getIdConta());		
-					st.execute("INSERT INTO RESGATE (idConta, valorResgate, tipoResgate, numeroParcelas) VALUES("+conta.getIdConta()+","+valor+","+tipoResgate+","+numeroParcelas+")");
+					st.execute("INSERT INTO RESGATE (idConta, valorResgate, tipoResgate, numeroParcelas) VALUES("+conta.getIdConta()+","+valor+",'"+tipoResgate+"',"+numeroParcelas+")");
 					return true;
 				}
 			
@@ -271,6 +271,25 @@ public class JdbcController {
 		}
 		return part;
 	}
+	public boolean validateIdadeConta(int idConta) {
+		try {
+			Statement st = con.createStatement();
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			long time = System.currentTimeMillis();
+			Date date = new Date(time);
+			date.setYear(date.getYear()-3);
+			ResultSet rs = st.executeQuery("SELECT * FROM CONTA WHERE idConta = "+idConta);
+			if(rs.next()) {
+				if(rs.getDate("dataCadastro").before(date)) {
+					return true;
+				}
+				return false;
+			} 
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 	public boolean validateResgateNormal(int idConta) {
 		try {
@@ -278,13 +297,20 @@ public class JdbcController {
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 			long time = System.currentTimeMillis();
 			Date date = new Date(time);
-			date.setYear(date.getYear()-3);
-			ResultSet rs = st.executeQuery("SELECT * FROM RESGATE WHERE idConta = "+idConta+" AND dataResgate >" )
+			date.setYear(date.getYear()-2);
+			ResultSet rs = st.executeQuery("SELECT * FROM RESGATE WHERE idConta = "+idConta+" AND tipoResgate = 'NORMAL'" );
+			if(rs.next()) {
+				if(rs.getDate("dataCadastro").before(date)) {
+					return true;
+				}
+				return false;
+			}
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
+
 	
 	
 	

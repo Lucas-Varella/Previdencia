@@ -1,6 +1,8 @@
 package model;
 
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import controller.JdbcController;
 import controller.MainController;
@@ -12,7 +14,7 @@ public class Main {
 		//instancia controlador principal, mostra tela principal
 		MainController mainController = new MainController();
 		mainController.showMainScreen();
-		
+
 	}
 
 }
