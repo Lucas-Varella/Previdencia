@@ -136,6 +136,9 @@ public class JdbcController {
 			Statement st = con.createStatement();
 			st.execute("DELETE FROM PARTICIPANTE WHERE idParticipante = "+part.getIdParticipante());
 			st.execute("DELETE FROM CONTA WHERE idConta = "+part.getIdConta());
+			st.execute("DELETE FROM RESGATE WHERE idConta = "+part.getIdConta());
+			st.execute("DELETE FROM CONTRIBUICAO WHERE idConta = "+part.getIdConta());
+			
 			ParticipanteController.getInstance().deleteParticipante(part);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -193,7 +196,7 @@ public class JdbcController {
 		return part;
 	}
 	//Atualiza valor de saldo de acordo com contribui��o
-	public int contribuir(Conta conta, String tipoContribuicao, Double valor) {
+	public void contribuir(Conta conta, String tipoContribuicao, Double valor) {
 		try {
 			valor = valor * 100;
 			valor = (double) (Math.round(valor));
@@ -201,21 +204,23 @@ public class JdbcController {
 			Statement st = con.createStatement();
 			switch(tipoContribuicao) {
 			case "PORTABILIDADE" :
-				st.execute("UPDATE CONTA SET saldoPortabilidade ="+(conta.getSaldoPortabilidade()+valor)+" WHERE idConta = "+conta.getIdConta());		
-				return 0;
+				st.execute("UPDATE CONTA SET saldoPortabilidade ="+(conta.getSaldoPortabilidade()+valor)+" WHERE idConta = "+conta.getIdConta());
+				st.execute("INSERT INTO CONTRIBUICAO (idConta, valorContribuicao, tipoContribuicao) VALUES("+conta.getIdConta()+","+valor+", '"+tipoContribuicao+"')");
+				break;
 			case "ADICIONAL" :
 				st.execute("UPDATE CONTA SET saldoContribuicoesAdicionais ="+(conta.getSaldoContribuicoesAdicionais()+valor)+" WHERE idConta = "+conta.getIdConta());		
-				return 0;
+				st.execute("INSERT INTO CONTRIBUICAO (idConta, valorContribuicao, tipoContribuicao) VALUES("+conta.getIdConta()+","+valor+", '"+tipoContribuicao+"')");
+				break;
 			case "NORMAL" :
 				st.execute("UPDATE CONTA SET saldoContribuicoesNormais ="+(conta.getSaldoContribuicoesNormais()+valor)+" WHERE idConta = "+conta.getIdConta());		
-				return 0;
+				st.execute("INSERT INTO CONTRIBUICAO (idConta, valorContribuicao, tipoContribuicao) VALUES("+conta.getIdConta()+","+valor+", '"+tipoContribuicao+"')");
+				break;
 			}
 			
 			
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return 0;
 		
 	}
 	
