@@ -67,20 +67,81 @@ public class ResgateScreen extends JFrame {
 		lblSaldoAtual.setBounds(62, 44, 291, 14);
 		contentPane.add(lblSaldoAtual);
 		
+
+		
 		JComboBox cbTipo = new JComboBox();
-		cbTipo.setModel(new DefaultComboBoxModel(new String[] {"PORTABILIDADE", "ADICIONAL", "NORMAL"}));
+		
+		JRadioButton rdbtnTotal = new JRadioButton("Resgate Total");
+		buttonGroup.add(rdbtnTotal);
+		rdbtnTotal.setForeground(Color.WHITE);
+		rdbtnTotal.setBackground(Color.DARK_GRAY);
+		rdbtnTotal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switch((String)cbTipo.getSelectedItem()) {
+				case "PORTABILIDADE" :
+					tfValor.setText(""+conta.getSaldoPortabilidade());
+					tfValor.setEditable(false);
+					break;
+				case "ADICIONAL" :
+					tfValor.setText(""+conta.getSaldoContribuicoesAdicionais());
+					tfValor.setEditable(false);
+					break;
+				case "NORMAL" :
+					tfValor.setText(""+conta.getSaldoContribuicoesNormais());
+					tfValor.setEditable(false);
+					break;
+				}
+			}
+		});
+		rdbtnTotal.setBounds(62, 90, 130, 23);
+		contentPane.add(rdbtnTotal);
+		
+		JRadioButton rdbtnResgateParcial = new JRadioButton("Resgate Parcial");
+		buttonGroup.add(rdbtnResgateParcial);
+		rdbtnResgateParcial.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tfValor.setText("");
+				tfValor.setEditable(true);
+			}
+		});
+		rdbtnResgateParcial.setBackground(Color.DARK_GRAY);
+		rdbtnResgateParcial.setForeground(Color.WHITE);
+		rdbtnResgateParcial.setBounds(189, 90, 149, 23);
+		contentPane.add(rdbtnResgateParcial);
+		
+		cbTipo.setModel(new DefaultComboBoxModel(new String[] {"PORTABILIDADE", "ADICIONAL", "NORMAL", "TOTAL"}));
 		cbTipo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				switch((String)cbTipo.getSelectedItem()) {
 				case "PORTABILIDADE" :
+					rdbtnResgateParcial.setEnabled(true);
+					rdbtnTotal.setEnabled(true);
+					tfValor.setText("");
+					tfValor.setEditable(true);
 					lblSaldoAtual.setText("Saldo Atual(Portabilidade): R$"+conta.getSaldoPortabilidade()+"0");
 					break;
 				case "ADICIONAL" :
+					rdbtnResgateParcial.setEnabled(true);
+					rdbtnTotal.setEnabled(true);
+					tfValor.setText("");
+					tfValor.setEditable(true);
 					lblSaldoAtual.setText("Saldo Atual(Adicional): R$"+conta.getSaldoContribuicoesAdicionais()+"0");
 					break;
 				case "NORMAL" :
+					rdbtnResgateParcial.setEnabled(true);
+					rdbtnTotal.setEnabled(true);
+					tfValor.setText("");
+					tfValor.setEditable(true);
 					lblSaldoAtual.setText("Saldo Atual(Normal): R$"+conta.getSaldoContribuicoesNormais()+"0");
 					break;
+				case "TOTAL" :
+					lblSaldoAtual.setText("Saldo Atual(Total): R$"+(conta.getSaldoContribuicoesNormais()+conta.getSaldoContribuicoesAdicionais()+conta.getSaldoPortabilidade())+"0");
+					tfValor.setText(""+(conta.getSaldoContribuicoesNormais()+conta.getSaldoContribuicoesAdicionais()+conta.getSaldoPortabilidade()));
+					tfValor.setEditable(false);
+					rdbtnResgateParcial.setEnabled(false);
+					rdbtnTotal.setEnabled(false);
+					break;
+
 				}
 			}
 		});
@@ -130,18 +191,25 @@ public class ResgateScreen extends JFrame {
 				try {
 					Double.parseDouble(tfValor.getText());
 					try {
+						
 						//validacao de resgate: Resgate normal efetuado em menos de 2 anos
 						if(((String)cbTipo.getSelectedItem()).equals("NORMAL") && !JdbcController.getInstance().validateResgateNormal(conta.getIdConta())) {
 							JOptionPane.showMessageDialog(null, "Resgates de contribuicoes normais so podem ocorrer a cada 2 anos!");
 						}else if(!JdbcController.getInstance().validateIdadeConta(conta.getIdConta())) { //valida contas cadastradas ha mais de 3 anos.
 							JOptionPane.showMessageDialog(null, "Deve haver periodo de carencia de 3 anos de criacao de conta ate poder resgatar!");
 						}else {
-							if(!JdbcController.getInstance().resgatar(conta, (String)cbTipo.getSelectedItem(), Double.parseDouble(tfValor.getText()), Integer.parseInt(tfParcelas.getText()))) {
-							    JOptionPane.showMessageDialog(null, "Nao ha saldo suficiente para resgate", "Atencao", JOptionPane.WARNING_MESSAGE, null);
-							}else {
-							    JOptionPane.showMessageDialog(null, "Resgatado valor de R$"+Double.parseDouble(tfValor.getText())+"0 Do saldo de "+(String)cbTipo.getSelectedItem()+".");
-							    setVisible(false);
-							    ScreenController.getInstance().showContaScreen(JdbcController.getInstance().findContaById(conta.getIdConta()));
+							if (((String)cbTipo.getSelectedItem()).equals("TOTAL")){ //solicita confirmacao para resgate total
+								if(0 == JOptionPane.showConfirmDialog(null, "O resgate total dos saldos acarretara no desligamento do participante. Confirma?", "Confirmar", JOptionPane.YES_NO_OPTION)) {
+									//realiza a operacao de resgate, verificando o saldo.
+									if(!JdbcController.getInstance().resgatar(conta, (String)cbTipo.getSelectedItem(), Double.parseDouble(tfValor.getText()), Integer.parseInt(tfParcelas.getText()))) {
+									    JOptionPane.showMessageDialog(null, "Nao ha saldo suficiente para resgate", "Atencao", JOptionPane.WARNING_MESSAGE, null);
+									}else {
+									    JOptionPane.showMessageDialog(null, "Resgatado valor de R$"+Double.parseDouble(tfValor.getText())+"0 Do saldo de "+(String)cbTipo.getSelectedItem()+".");
+									    setVisible(false);
+									    ScreenController.getInstance().showContaScreen(JdbcController.getInstance().findContaById(conta.getIdConta()));
+									}
+								}
+								
 							}
 							
 						}
@@ -162,43 +230,7 @@ public class ResgateScreen extends JFrame {
 		btnConfirmar.setBounds(75, 178, 117, 23);
 		contentPane.add(btnConfirmar);
 		
-		JRadioButton rdbtnTotal = new JRadioButton("Resgate Total");
-		buttonGroup.add(rdbtnTotal);
-		rdbtnTotal.setForeground(Color.WHITE);
-		rdbtnTotal.setBackground(Color.DARK_GRAY);
-		rdbtnTotal.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				switch((String)cbTipo.getSelectedItem()) {
-				case "PORTABILIDADE" :
-					tfValor.setText(""+conta.getSaldoPortabilidade());
-					tfValor.setEditable(false);
-					break;
-				case "ADICIONAL" :
-					tfValor.setText(""+conta.getSaldoContribuicoesAdicionais());
-					tfValor.setEditable(false);
-					break;
-				case "NORMAL" :
-					tfValor.setText(""+conta.getSaldoContribuicoesNormais());
-					tfValor.setEditable(false);
-					break;
-				}
-			}
-		});
-		rdbtnTotal.setBounds(62, 90, 130, 23);
-		contentPane.add(rdbtnTotal);
-		
-		JRadioButton rdbtnResgateParcial = new JRadioButton("Resgate Parcial");
-		buttonGroup.add(rdbtnResgateParcial);
-		rdbtnResgateParcial.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				tfValor.setText("");
-				tfValor.setEditable(true);
-			}
-		});
-		rdbtnResgateParcial.setBackground(Color.DARK_GRAY);
-		rdbtnResgateParcial.setForeground(Color.WHITE);
-		rdbtnResgateParcial.setBounds(189, 90, 149, 23);
-		contentPane.add(rdbtnResgateParcial);
+
 		
 
 	}

@@ -242,6 +242,8 @@ public class JdbcController {
 					st.execute("UPDATE CONTA SET saldoContribuicoesNormais ="+(conta.getSaldoContribuicoesNormais()-valor)+" WHERE idConta = "+conta.getIdConta());		
 					st.execute("INSERT INTO RESGATE (idConta, valorResgate, tipoResgate, numeroParcelas) VALUES("+conta.getIdConta()+","+valor+",'"+tipoResgate+"',"+numeroParcelas+")");
 					return true;
+				case "TOTAL" :
+					
 				}
 			
 			
