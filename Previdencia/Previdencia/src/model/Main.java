@@ -14,7 +14,7 @@ public class Main {
 		//instancia controlador principal, mostra tela principal
 		MainController mainController = new MainController();
 		mainController.showMainScreen();
-		System.out.println("p type, actions on total");
+		System.out.println("actions on total");
 	}
 
 }

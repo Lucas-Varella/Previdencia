@@ -10,6 +10,8 @@ import javax.swing.border.EmptyBorder;
 import controller.JdbcController;
 import controller.ScreenController;
 import model.Conta;
+import model.Participante;
+
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -29,6 +31,7 @@ public class ResgateScreen extends JFrame {
 	private JTextField tfValor;
 	private JTextField tfParcelas;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private boolean parcelas;
 
 	/**
 	 * Launch the application.
@@ -175,15 +178,21 @@ public class ResgateScreen extends JFrame {
 		contentPane.add(tfValor);
 		tfValor.setColumns(10);
 		
-		JLabel lblNumeroDeParcelas = new JLabel("Numero de parcelas :");
-		lblNumeroDeParcelas.setBounds(62, 145, 117, 14);
-		contentPane.add(lblNumeroDeParcelas);
+	
 		
-		tfParcelas = new JTextField();
-		tfParcelas.setText("1");
-		tfParcelas.setBounds(189, 142, 149, 20);
-		contentPane.add(tfParcelas);
-		tfParcelas.setColumns(10);
+		Participante part = JdbcController.getInstance().findParticipanteByContaId(conta.getIdConta());
+		if(part.getSituacaoParticipante().equals("ATIVO")||part.getSituacaoParticipante().equals("SUSPENSO")||part.getSituacaoParticipante().equals("VINCULADO")) {
+			tfParcelas = new JTextField();
+			tfParcelas.setText("1");
+			tfParcelas.setBounds(189, 142, 149, 20);
+			contentPane.add(tfParcelas);
+			tfParcelas.setColumns(10);
+			JLabel lblNumeroDeParcelas = new JLabel("Numero de parcelas :");
+			lblNumeroDeParcelas.setBounds(62, 145, 117, 14);
+			contentPane.add(lblNumeroDeParcelas);
+			parcelas = true;
+		}
+		
 		
 		JButton btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.addActionListener(new ActionListener() {
@@ -191,16 +200,20 @@ public class ResgateScreen extends JFrame {
 				try {
 					Double.parseDouble(tfValor.getText());
 					try {
-						
+						if(parcelas && (Integer.parseInt(tfParcelas.getText()) <= 60) ) {
+							JOptionPane.showMessageDialog(null, "Maximo de 60 parcelas!");
 						//validacao de resgate: Resgate normal efetuado em menos de 2 anos
-						if(((String)cbTipo.getSelectedItem()).equals("NORMAL") && !JdbcController.getInstance().validateResgateNormal(conta.getIdConta())) {
+						}else if(((String)cbTipo.getSelectedItem()).equals("NORMAL") && !JdbcController.getInstance().validateResgateNormal(conta.getIdConta())) {
 							JOptionPane.showMessageDialog(null, "Resgates de contribuicoes normais so podem ocorrer a cada 2 anos!");
-						}else if(!JdbcController.getInstance().validateIdadeConta(conta.getIdConta())) { //valida contas cadastradas ha mais de 3 anos.
+						//valida contas cadastradas ha mais de 3 anos.
+						}else if(!JdbcController.getInstance().validateIdadeConta(conta.getIdConta())) { 
 							JOptionPane.showMessageDialog(null, "Deve haver periodo de carencia de 3 anos de criacao de conta ate poder resgatar!");
+						//valida resgate normal <= 20% do saldo
 						}else if( ( ( (String) cbTipo.getSelectedItem() ).equals("NORMAL") ) && ( (Double.parseDouble(tfValor.getText())) > ( 0.2*conta.getSaldoContribuicoesNormais() ) ) ) {
 							JOptionPane.showMessageDialog(null, "Somente pode-se realizar resgate de 20% das contribuicoes normais! valor maximo: "+(conta.getSaldoContribuicoesNormais()*0.2));
 						}else {
-							if (((String)cbTipo.getSelectedItem()).equals("TOTAL")){ //solicita confirmacao para resgate total
+							//solicita confirmacao para resgate total
+							if (((String)cbTipo.getSelectedItem()).equals("TOTAL")){ 
 								if(0 == JOptionPane.showConfirmDialog(null, "O resgate total dos saldos acarretara no desligamento do participante. Confirma?", "Confirmar", JOptionPane.YES_NO_OPTION)) {
 									//realiza a operacao de resgate, verificando o saldo.
 									if(!JdbcController.getInstance().resgatar(conta, (String)cbTipo.getSelectedItem(), Double.parseDouble(tfValor.getText()), Integer.parseInt(tfParcelas.getText()))) {
@@ -208,11 +221,12 @@ public class ResgateScreen extends JFrame {
 									}else {
 									    JOptionPane.showMessageDialog(null, "Resgatado valor de R$"+Double.parseDouble(tfValor.getText())+"0 Do saldo de "+(String)cbTipo.getSelectedItem()+".");
 									    setVisible(false);
-									    ScreenController.getInstance().showContaScreen(JdbcController.getInstance().findContaById(conta.getIdConta()));
+									    ScreenController.getInstance().showContaScreen(conta);
 									}
 								}
 								
 							} else {
+								//resgate normal, somente valida saldo positivo
 								if(!JdbcController.getInstance().resgatar(conta, (String)cbTipo.getSelectedItem(), Double.parseDouble(tfValor.getText()), Integer.parseInt(tfParcelas.getText()))) {
 								    JOptionPane.showMessageDialog(null, "Nao ha saldo suficiente para resgate", "Atencao", JOptionPane.WARNING_MESSAGE, null);
 								}else {
