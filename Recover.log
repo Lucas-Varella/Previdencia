@@ -7,3 +7,7 @@
 2019-04-09 20:29:09.932 -0300	Previdencia.fmp12	8432	Page 61 marked free but not in free list
 2019-04-09 20:29:09.945 -0300	Previdencia.fmp12	0	Reset maximum block sequence number to 9102
 2019-04-09 20:29:09.968 -0300	Previdencia.fmp12	0	*** Completed consistency check, checked 61 block(s)
+2019-04-09 23:09:07.556 -0300	Previdencia.fmp12	0	*** Started consistency check of improperly closed file, total of 61 block(s) to check
+2019-04-09 23:09:07.560 -0300	Previdencia.fmp12	8432	Page 61 marked free but not in free list
+2019-04-09 23:09:07.561 -0300	Previdencia.fmp12	0	Reset maximum block sequence number to 9506
+2019-04-09 23:09:07.564 -0300	Previdencia.fmp12	0	*** Completed consistency check, checked 61 block(s)
