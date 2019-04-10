@@ -302,7 +302,7 @@ public class JdbcController {
 			date.setYear(date.getYear()-2);
 			ResultSet rs = st.executeQuery("SELECT * FROM RESGATE WHERE idConta = "+idConta+" AND tipoResgate = 'NORMAL'" );
 			if(rs.next()) {
-				if(rs.getDate("dataCadastro").before(date)) {
+				if(rs.getDate("dataResgate").before(date)) {
 					return true;
 				}
 				return false;
@@ -310,7 +310,7 @@ public class JdbcController {
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return false;
+		return true;
 	}
 
 	

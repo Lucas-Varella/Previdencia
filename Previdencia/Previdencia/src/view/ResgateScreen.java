@@ -197,6 +197,8 @@ public class ResgateScreen extends JFrame {
 							JOptionPane.showMessageDialog(null, "Resgates de contribuicoes normais so podem ocorrer a cada 2 anos!");
 						}else if(!JdbcController.getInstance().validateIdadeConta(conta.getIdConta())) { //valida contas cadastradas ha mais de 3 anos.
 							JOptionPane.showMessageDialog(null, "Deve haver periodo de carencia de 3 anos de criacao de conta ate poder resgatar!");
+						}else if( ( ( (String) cbTipo.getSelectedItem() ).equals("NORMAL") ) && ( (Double.parseDouble(tfValor.getText())) > ( 0.2*conta.getSaldoContribuicoesNormais() ) ) ) {
+							JOptionPane.showMessageDialog(null, "Somente pode-se realizar resgate de 20% das contribuicoes normais! valor maximo: "+(conta.getSaldoContribuicoesNormais()*0.2));
 						}else {
 							if (((String)cbTipo.getSelectedItem()).equals("TOTAL")){ //solicita confirmacao para resgate total
 								if(0 == JOptionPane.showConfirmDialog(null, "O resgate total dos saldos acarretara no desligamento do participante. Confirma?", "Confirmar", JOptionPane.YES_NO_OPTION)) {
@@ -210,6 +212,15 @@ public class ResgateScreen extends JFrame {
 									}
 								}
 								
+							} else {
+								if(!JdbcController.getInstance().resgatar(conta, (String)cbTipo.getSelectedItem(), Double.parseDouble(tfValor.getText()), Integer.parseInt(tfParcelas.getText()))) {
+								    JOptionPane.showMessageDialog(null, "Nao ha saldo suficiente para resgate", "Atencao", JOptionPane.WARNING_MESSAGE, null);
+								}else {
+									System.out.println((String)cbTipo.getSelectedItem()+ " test equals normal:  "+((String)cbTipo.getSelectedItem()).equals("NORMAL")+" multiplication: "+(0.2*conta.getSaldoContribuicoesNormais()+" value: "+Double.parseDouble(tfValor.getText())+" test if value < acc "+(Double.parseDouble(tfValor.getText()) <= (0.2*conta.getSaldoContribuicoesNormais()) ) ));
+								    JOptionPane.showMessageDialog(null, "Resgatado valor de R$"+Double.parseDouble(tfValor.getText())+"0 Do saldo de "+(String)cbTipo.getSelectedItem()+".");
+								    setVisible(false);
+								    ScreenController.getInstance().showContaScreen(JdbcController.getInstance().findContaById(conta.getIdConta()));
+								}
 							}
 							
 						}
