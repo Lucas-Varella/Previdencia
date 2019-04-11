@@ -33,21 +33,7 @@ public class ResgateScreen extends JFrame {
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private boolean parcelas;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ResgateScreen frame = new ResgateScreen();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
+
 
 	/**
 	 * Create the frame.

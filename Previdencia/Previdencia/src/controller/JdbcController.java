@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import model.Conta;
 import model.Contribuicao;
 import model.Participante;
+import model.Resgate;
 
 public class JdbcController {
 	
@@ -347,6 +348,57 @@ public class JdbcController {
 			e.printStackTrace();
 		}
 		
+	}
+
+	public ArrayList<Contribuicao> loadContribuicoes(int idConta) {
+		ArrayList<Contribuicao> contrs = new ArrayList<>();
+		int idContribuicao;
+		Date dataContribuicao;
+		double valorContribuicao;
+		String tipoContribuicao;
+		try {
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM CONTRIBUICAO WHERE idConta ="+idConta);
+			while(rs.next()) {
+				idContribuicao = rs.getInt("idContribuicao");
+				dataContribuicao = rs.getDate("dataContribuicao");
+				tipoContribuicao = rs.getString("tipoContribuicao");
+				valorContribuicao = rs.getDouble("valorContribuicao");
+				Contribuicao contr = new Contribuicao(idContribuicao, dataContribuicao, idConta, valorContribuicao, tipoContribuicao);
+				contrs.add(contr);
+			}
+			return contrs;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return contrs;
+	}
+	public ArrayList<Resgate> loadResgates(int idConta) {
+		ArrayList<Resgate> resgs = new ArrayList<>();
+		int idResgate;
+		Date dataResgate;
+		double valorResgate;
+		String tipoResgate;
+		int numeroParcelas;
+		try {
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM RESGATE WHERE idConta="+idConta);
+			while(rs.next()) {
+				idResgate = rs.getInt("idResgate");
+				dataResgate = rs.getDate("dataResgate");
+				tipoResgate = rs.getString("tipoResgate");
+				valorResgate = rs.getDouble("valorResgate");
+				numeroParcelas = rs.getInt("numeroParcelas");
+				Resgate resg = new Resgate(idResgate, dataResgate, idConta, valorResgate, tipoResgate,numeroParcelas);
+				resgs.add(resg);
+			}
+			return resgs;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resgs;
 	}
 
 	

@@ -27,21 +27,7 @@ public class CadastroScreen extends JFrame {
 	private JPanel contentPane;
 	private JTextField tfNome;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					CadastroScreen frame = new CadastroScreen();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
+
 
 	/**
 	 * Create the frame.

@@ -35,21 +35,7 @@ public class ParticipanteScreen extends JFrame {
 	private JTable tbParticipantes;
 	private DefaultTableModel tableModel;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ParticipanteScreen frame = new ParticipanteScreen();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
+
 
 	/**
 	 * Create the frame.

@@ -23,21 +23,7 @@ public class ContaScreen extends JFrame {
 	private JPanel contentPane;
 	private Conta conta;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ContaScreen frame = new ContaScreen();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
+
 
 	/**
 	 * Create the frame.
@@ -99,9 +85,22 @@ public class ContaScreen extends JFrame {
 		btnResgatarValor.setBackground(Color.DARK_GRAY);
 		btnResgatarValor.setBounds(193, 192, 129, 23);
 		
+		JButton btnExtrato = new JButton("Consultar Extrato");
+		btnExtrato.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				ScreenController.getInstance().showExtratoScreen(conta);
+			}
+		});
+		btnExtrato.setForeground(Color.WHITE);
+		btnExtrato.setBackground(Color.DARK_GRAY);
+		btnExtrato.setBounds(248, 150, 173, 23);
+		
 		if(!JdbcController.getInstance().findParticipanteByContaId(conta.getIdConta()).getSituacaoParticipante().equals("CANCELADO")) {
 			contentPane.add(btnContribuirConta);
 			contentPane.add(btnResgatarValor);
+			contentPane.add(btnExtrato);
+
 		}else {
 			lblConta.setText("Conta: "+conta.getIdConta()+"    |    Criada em "+conta.getDataCadastro()+"  !CANCELADA!");
 			lblSaldoportabilidade.setText("Saldo Portabilidade: R$0.0");
@@ -121,5 +120,7 @@ public class ContaScreen extends JFrame {
 		});
 		btnRetornar.setBounds(332, 192, 89, 23);
 		contentPane.add(btnRetornar);
+		
+		
 	}
 }

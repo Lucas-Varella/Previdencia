@@ -4,14 +4,16 @@ import java.sql.Date;
 
 public class Resgate {
 	
-	private long idResgate;
+	private int idResgate;
 	private Date dataResgate;
-	private long idConta;
+	private int idConta;
 	private double valor;
 	private String tipoResgate;
-	private long numeroParcelas;
+	private int numeroParcelas;
 	
-	public Resgate(long idConta, double valor, String tipoResgate, long numeroParcelas) {
+	public Resgate(int idResgate, Date dataResgate, int idConta, double valor, String tipoResgate, int numeroParcelas) {
+		this.idResgate = idResgate;
+		this.dataResgate = dataResgate;
 		this.idConta = idConta;
 		this.valor = valor;
 		this.tipoResgate = tipoResgate;

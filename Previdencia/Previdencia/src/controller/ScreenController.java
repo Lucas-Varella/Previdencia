@@ -49,7 +49,7 @@ public class ScreenController {
 	}
 
 	public void showEditionScreen(Participante selectedValue) {
-		EditionScreen edscr = new EditionScreen(selectedValue);
+		EditingScreen edscr = new EditingScreen(selectedValue);
 		edscr.setVisible(true);
 		
 	}
@@ -68,6 +68,13 @@ public class ScreenController {
 	public void showResgateScreen(Conta conta) {
 		ResgateScreen resgscr = new ResgateScreen(conta);
 		resgscr.setVisible(true);
+		
+	}
+
+	public void showExtratoScreen(Conta conta) {
+		
+		ExtratoScreen extrscr = new ExtratoScreen(conta);
+		extrscr.setVisible(true);
 		
 	}
 

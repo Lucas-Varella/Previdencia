@@ -23,31 +23,16 @@ import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
-public class EditionScreen extends JFrame {
+public class EditingScreen extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField tfName;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					EditionScreen frame = new EditionScreen();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
 
 	/**
 	 * Create the frame.
 	 */
-	public EditionScreen(Participante part) {
+	public EditingScreen(Participante part) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -61,19 +46,15 @@ public class EditionScreen extends JFrame {
 		lblEdicaoDeParticipante.setBounds(119, 24, 290, 29);
 		contentPane.add(lblEdicaoDeParticipante);
 		
-		JLabel lblNomeAntigo = new JLabel("Nome Antigo:");
-		lblNomeAntigo.setBounds(52, 68, 97, 14);
+		JLabel lblNomeAntigo = new JLabel("Nome Antigo: "+part.getNomeParticipante()+", atualmente "+part.getSituacaoParticipante());
+		lblNomeAntigo.setBounds(52, 68, 357, 14);
 		contentPane.add(lblNomeAntigo);
-		
-		JLabel lblNomeantigo = new JLabel(part.getNomeParticipante());
-		lblNomeantigo.setBounds(152, 68, 186, 14);
-		contentPane.add(lblNomeantigo);
 		
 		JLabel lblNomeNovo = new JLabel("Nome :");
 		lblNomeNovo.setBounds(52, 93, 97, 14);
 		contentPane.add(lblNomeNovo);
 		
-		tfName = new JTextField();
+		tfName = new JTextField(part.getNomeParticipante());
 		tfName.setBounds(152, 90, 186, 20);
 		contentPane.add(tfName);
 		tfName.setColumns(10);
@@ -81,6 +62,7 @@ public class EditionScreen extends JFrame {
 		JComboBox comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"ATIVO", "BENEFICIO", "VINCULADO", "SUSPENSO"}));
 		comboBox.setBounds(152, 115, 186, 20);
+		comboBox.setSelectedItem(part.getSituacaoParticipante());
 		contentPane.add(comboBox);
 		
 		JButton btnConfirmar = new JButton("Confirmar");
